@@ -33,7 +33,7 @@ sub authorization_required {
 
     $c->authorization_required_response( %opts );
 
-    $c->detach( sub { } );
+    die $Catalyst::DETACH;
 }
 
 sub authorization_required_response {
