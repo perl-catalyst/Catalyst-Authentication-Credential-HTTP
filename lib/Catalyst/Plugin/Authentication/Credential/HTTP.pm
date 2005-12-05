@@ -8,6 +8,7 @@ use warnings;
 
 use String::Escape ();
 use URI::Escape    ();
+use Catalyst       ();
 
 our $VERSION = "0.01";
 

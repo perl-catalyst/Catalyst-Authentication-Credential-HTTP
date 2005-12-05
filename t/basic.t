@@ -3,9 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 11;
 use Test::MockObject::Extends;
 use Test::MockObject;
+use Test::Exception;
 use HTTP::Headers;
 
 
@@ -32,7 +33,6 @@ my $c = Test::MockObject::Extends->new( $m );
 
 my @login_info;
 $c->mock( login => sub { shift; @login_info = @_; 1 } );
-$c->set_false( "detach" );
 $c->set_always( config => {} );
 $c->set_always( req => $req );
 $c->set_always( res => $res );
@@ -45,14 +45,16 @@ $req_headers->authorization_basic( qw/foo bar/ );
 ok( $c->authenticate_http, "auth successful with header");
 is_deeply( \@login_info, [qw/foo bar/], "login info delegated");
 
-ok( $c->authorization_required, "authorization required with successful authentication");
-ok( !$c->called("detach"), "didnt' detach");
+lives_ok {
+    $c->authorization_required
+} "no detach on authorization required with successful authentication";
 
 $req_headers->clear;
 $c->clear;
 
-ok( !$c->authorization_required, "authorization required with bad authentication");
-$c->called_ok("detach", "detached");
+throws_ok {
+    $c->authorization_required;
+} qr/^ $Catalyst::DETACH $/x, "detached on no authorization required with bad auth";
 
 is( $status, 401, "401 status code" );
 like( $res_headers->www_authenticate, qr/^Basic/, "WWW-Authenticate header set");
