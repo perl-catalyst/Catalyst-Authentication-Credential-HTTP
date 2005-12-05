@@ -76,7 +76,7 @@ for Catlayst.
 
 =head1 SYNOPSIS
 
-	use Catalyst qw/
+    use Catalyst qw/
         Authentication
         Authentication::Store::Moose
         Authentication::Credential::HTTP
@@ -85,7 +85,7 @@ for Catlayst.
     sub foo : Local { 
         my ( $self, $c ) = @_;
 
-        $c->authorization_requried( realm => "foo" ); # named after the status code ;-)
+        $c->authorization_required( realm => "foo" ); # named after the status code ;-)
 
         # either user gets authenticated or 401 is sent
 
@@ -116,7 +116,7 @@ will also be added. Patches welcome!
 
 =item authorization_required
 
-Tries to C<authenticate_http>, and if that files calls
+Tries to C<authenticate_http>, and if that fails calls
 C<authorization_required_response> and detaches the current action call stack.
 
 =item authenticate_http
