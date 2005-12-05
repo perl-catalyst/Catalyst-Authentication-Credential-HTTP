@@ -26,7 +26,7 @@ use HTTP::Request;
 
         $c->authorization_required;
 
-        $c->res->body("foo");
+        $c->res->body( $c->user->id );
 	}
 
 	__PACKAGE__->config->{authentication}{users} = $users = {
