@@ -3,47 +3,43 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
+
+BEGIN {
+    eval { require Test::WWW::Mechanize::Catalyst }
+      or plan skip_all =>
+      "Test::WWW::Mechanize::Catalyst is needed for this test";
+    plan tests => 4;
+}
+
 use HTTP::Request;
 
 {
-	package AuthTestApp;
-	use Catalyst qw/
-		Authentication
-		Authentication::Store::Minimal
-		Authentication::Credential::HTTP
-	/;
 
-	use Test::More;
-	use Test::Exception;
+    package AuthTestApp;
+    use Catalyst qw/
+      Authentication
+      Authentication::Store::Minimal
+      Authentication::Credential::HTTP
+      /;
 
-	use Digest::MD5 qw/md5/;
+    use Test::More;
 
-	our $users;
+    our $users;
 
-	sub moose : Local {
-		my ( $self, $c ) = @_;
+    sub moose : Local {
+        my ( $self, $c ) = @_;
 
         $c->authorization_required;
 
         $c->res->body( $c->user->id );
-	}
+    }
 
-	__PACKAGE__->config->{authentication}{users} = $users = {
-		foo => {
-			password => "s3cr3t",
-		},
-		bar => {
-			crypted_password => crypt("s3cr3t", "x8"),
-		},
-		gorch => {
-			hashed_password => md5("s3cr3t"),
-			hash_algorithm => "MD5",
-		},
-		baz => {},
-	};
+    __PACKAGE__->config->{authentication}{users} = $users = {
+        foo => { password         => "s3cr3t", },
+    };
 
-	__PACKAGE__->setup;
+    __PACKAGE__->setup;
 }
 
 use Test::WWW::Mechanize::Catalyst qw/AuthTestApp/;
@@ -51,15 +47,14 @@ use Test::WWW::Mechanize::Catalyst qw/AuthTestApp/;
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 
 $mech->get("http://localhost/moose");
-is( $mech->status, 401, "status is 401");
+is( $mech->status, 401, "status is 401" );
 
-$mech->content_lacks("foo", "no output");
+$mech->content_lacks( "foo", "no output" );
 
 my $r = HTTP::Request->new( GET => "http://localhost/moose" );
 $r->authorization_basic(qw/foo s3cr3t/);
 
-$mech->request( $r );
-is( $mech->status, 200, "status is 200");
-$mech->content_contains("foo", "foo output");
-
+$mech->request($r);
+is( $mech->status, 200, "status is 200" );
+$mech->content_contains( "foo", "foo output" );
 
