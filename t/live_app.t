@@ -34,7 +34,7 @@ use HTTP::Request;
 
         $c->res->body( $c->user->id );
     }
-
+    __PACKAGE__->config->{authentication}{http}{type} = 'basic';
     __PACKAGE__->config->{authentication}{users} = $users = {
         foo => { password         => "s3cr3t", },
     };

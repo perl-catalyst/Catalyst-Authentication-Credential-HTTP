@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Test::MockObject::Extends;
 use Test::MockObject;
 use Test::Exception;
@@ -31,6 +31,11 @@ $res->set_always( headers => $res_headers );
 
 my $c = Test::MockObject::Extends->new( $m );
 
+my $cache = Test::MockObject->new;
+$cache->mock(set => sub { shift->{$_[0]} = $_[1] });
+$cache->mock(get => sub { return shift->{$_[0]} });
+$c->mock(cache => sub { $cache });
+
 my @login_info;
 $c->mock( login => sub { shift; @login_info = @_; 1 } );
 $c->set_always( config => {} );
@@ -57,4 +62,5 @@ throws_ok {
 } qr/^ $Catalyst::DETACH $/x, "detached on no authorization required with bad auth";
 
 is( $status, 401, "401 status code" );
-like( $res_headers->www_authenticate, qr/^Basic/, "WWW-Authenticate header set");
+like( ($res_headers->header('WWW-Authenticate'))[0], qr/^Digest/, "WWW-Authenticate header set: digest");
+like( ($res_headers->header('WWW-Authenticate'))[1], qr/^Basic/, "WWW-Authenticate header set: basic");
