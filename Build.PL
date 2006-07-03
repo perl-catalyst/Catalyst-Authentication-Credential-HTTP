@@ -15,7 +15,7 @@ my $build = Module::Build->new(
         'Test::Exception'                  => 0,
     },
     create_readme => 1,
-    sign          => 1,
+    sign          => 0,
 );
 $build->create_build_script;
 
