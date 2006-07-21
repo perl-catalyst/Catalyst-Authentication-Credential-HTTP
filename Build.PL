@@ -13,6 +13,7 @@ my $build = Module::Build->new(
         'URI::Escape'                      => 0,
         'Test::MockObject'                 => '1.01',
         'Test::Exception'                  => 0,
+        'Data::UUID'                       => 0.11
     },
     create_readme => 1,
     sign          => 0,

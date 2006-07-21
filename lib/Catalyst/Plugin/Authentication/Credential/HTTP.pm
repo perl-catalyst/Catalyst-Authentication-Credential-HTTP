@@ -11,7 +11,7 @@ use URI::Escape    ();
 use Catalyst       ();
 use Digest::MD5    ();
 
-our $VERSION = "0.04";
+our $VERSION = "0.05";
 
 sub authenticate_http {
     my $c = shift;
