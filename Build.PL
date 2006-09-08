@@ -1,6 +1,5 @@
 use strict;
 use Module::Build;
-
 my $build = Module::Build->new(
     create_makefile_pl => 'traditional',
     license            => 'perl',
@@ -19,4 +18,3 @@ my $build = Module::Build->new(
     sign          => 0,
 );
 $build->create_build_script;
-
