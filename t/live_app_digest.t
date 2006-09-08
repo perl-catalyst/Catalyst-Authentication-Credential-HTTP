@@ -55,10 +55,15 @@ is( $mech->status, 401, "status is 401" );
 
 my $www_auth = $mech->res->headers->header('WWW-Authenticate');
 my %www_auth_params = map {
+
     my @key_val = split /=/, $_, 2;
+
     $key_val[0] = lc $key_val[0];
+
     $key_val[1] =~ s{"}{}g;    # remove the quotes
+
     @key_val;
+
 } split /, /, substr( $www_auth, 7 );    #7 == length "Digest "
 
 $mech->content_lacks( "foo", "no output" );
@@ -66,28 +71,45 @@ $mech->content_lacks( "foo", "no output" );
 my $response = '';
 {
     my $username = 'Mufasa';
+
     my $password = 'Circle Of Life';
+
     my $realm    = $www_auth_params{realm};
+
     my $nonce    = $www_auth_params{nonce};
+
     my $cnonce   = '0a4f113b';
+
     my $opaque   = $www_auth_params{opaque};
+
     my $nc       = '00000001';
+
     my $method   = 'GET';
+
     my $qop      = 'auth';
+
     my $uri      = '/moose';
 
     my $ctx = Digest::MD5->new;
+
     $ctx->add( join( ':', $username, $realm, $password ) );
+
     my $A1_digest = $ctx->hexdigest;
 
     $ctx = Digest::MD5->new;
+
     $ctx->add( join( ':', $method, $uri ) );
+
     my $A2_digest = $ctx->hexdigest;
 
     my $digest = Digest::MD5::md5_hex(
+
         join( ':',
+
             $A1_digest, $nonce, $qop ? ( $nc, $cnonce, $qop ) : (), $A2_digest )
+
     );
+
 
     $response = qq{Digest username="$username", realm="$realm", nonce="$nonce", uri="$uri", qop=$qop, nc=$nc, cnonce="$cnonce", response="$digest", opaque="$opaque"};
 }
