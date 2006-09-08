@@ -11,7 +11,7 @@ use URI::Escape    ();
 use Catalyst       ();
 use Digest::MD5    ();
 
-our $VERSION = "0.05";
+our $VERSION = "0.06";
 
 sub authenticate_http {
     my ( $c, @args ) = @_;
@@ -22,7 +22,12 @@ sub authenticate_http {
 
 sub get_http_auth_store {
     my ( $c, %opts ) = @_;
-    $opts{store} || $c->config->{authentication}{http}{store};
+
+    my $store = $opts{store} || $c->config->{authentication}{http}{store} || return;
+
+    return ref $store
+        ? $store
+        : $c->get_auth_store($store);
 }
 
 sub authenticate_basic {
@@ -68,7 +73,7 @@ sub authenticate_digest {
         } split /,\s?/, substr( $authorization, 7 );    #7 == length "Digest "
 
         my $opaque = $res{opaque};
-        my $nonce  = $c->_get_digest_authorization_nonce( __PACKAGE__ . '::opaque:' . $opaque );
+        my $nonce  = $c->get_digest_authorization_nonce( __PACKAGE__ . '::opaque:' . $opaque );
         next unless $nonce;
 
         $c->log->debug('Checking authentication parameters.')
@@ -101,11 +106,12 @@ sub authenticate_digest {
         my $realm    = $res{realm};
 
         my $user;
-        my $store = $opts{store}
-          || $c->config->{authentication}{http}{store}
-          || $c->default_auth_store;
 
-        $user = $store->get_user($username) if $store;
+        unless ( $user = $opts{user} ) {
+            if ( my $store = $c->get_http_auth_store(%opts) || $c->default_auth_store ) {
+                $user = $store->get_user($username);
+            }
+        }
 
         unless ($user) {    # no user, no authentication
             $c->log->debug('Unknown user: $user.') if $c->debug;
@@ -282,7 +288,7 @@ sub _build_digest_auth_header {
 
     my $key = __PACKAGE__ . '::opaque:' . $nonce->opaque;
    
-    $c->_store_digest_authorization_nonce( $key, $nonce );
+    $c->store_digest_authorization_nonce( $key, $nonce );
 
     return $c->_join_auth_header_parts( Digest =>
         $c->_build_auth_header_common($opts),
@@ -302,11 +308,9 @@ sub _digest_auth_nonce {
 
     my $nonce   = $package->new;
 
-    my $algorithm = $opts->{algorithm}
-      || $c->config->{authentication}{http}{algorithm}
-      || $nonce->algorithm;
-
-    $nonce->algorithm( $algorithm );
+    if ( my $algorithm = $opts->{algorithm} || $c->config->{authentication}{http}{algorithm}) { 
+        $nonce->algorithm( $algorithm );
+    }
 
     return $nonce;
 }
@@ -316,14 +320,14 @@ sub _join_auth_header_parts {
     return "$type " . join(", ", @parts );
 }
 
-sub _get_digest_authorization_nonce {
+sub get_digest_authorization_nonce {
     my ( $c, $key ) = @_;
 
     $c->_check_cache;
     $c->cache->get( $key );
 }
 
-sub _store_digest_authorization_nonce {
+sub store_digest_authorization_nonce {
     my ( $c, $key, $nonce ) = @_;
 
     $c->_check_cache;
@@ -407,20 +411,72 @@ are currently supported.
 
 =over 4
 
-=item authorization_required
+=item authorization_required %opts
 
 Tries to C<authenticate_http>, and if that fails calls
 C<authorization_required_response> and detaches the current action call stack.
 
-=item authenticate_http
+This method just passes the options through untouched.
+
+=item authenticate_http %opts
 
 Looks inside C<< $c->request->headers >> and processes the digest and basic
 (badly named) authorization header.
 
-=item authorization_required_response
+This will only try the methods set in the configuration.
+
+See the next two methods for what %opts can contain.
+
+=item authenticate_basic %opts
+
+=item authenticate_digest %opts
+
+Try to authenticate one of the methods without checking if the method is
+allowed in the configuration.
+
+%opts can contain C<store> (either an object or a name), C<user> (to disregard
+%the username from the header altogether, overriding it with a username or user
+%object).
+
+=item authorization_required_response %opts
 
 Sets C<< $c->response >> to the correct status code, and adds the correct
 header to demand authentication data from the user agent.
+
+Typically used by C<authorization_required>, but may be invoked manually.
+
+%opts can contain C<realm>, C<domain> and C<algorithm>, which are used to build
+%the digest header.
+
+=item store_digest_authorization_nonce $key, $nonce
+
+=item get_digest_authorization_nonce $key
+
+Set or get the C<$nonce> object used by the digest auth mode.
+
+You may override these methods. By default they will call C<get> and C<set> on
+C<< $c->cache >>.
+
+=back
+
+=head1 CONFIGURATION
+
+All configuration is stored in C<< YourApp->config->{authentication}{http} >>.
+
+This should be a hash, and it can contain the following entries:
+
+=over 4
+
+=item store
+
+Either a name or an object -- the default store to use for HTTP authentication.
+
+=item type
+
+Can be either C<any> (the default), C<basic> or C<digest>.
+
+This controls C<authorization_required_response> and C<authenticate_http>, but
+not the "manual" methods.
 
 =back
 
