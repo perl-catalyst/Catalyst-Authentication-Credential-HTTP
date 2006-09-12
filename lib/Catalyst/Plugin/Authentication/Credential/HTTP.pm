@@ -253,7 +253,7 @@ sub _build_auth_header_domain {
     my ( $c, $opts ) = @_;
 
     if ( my $domain = $opts->{domain} ) {
-        Catalyst::Excpetion->throw("domain must be an array reference")
+        Catalyst::Exception->throw("domain must be an array reference")
           unless ref($domain) && ref($domain) eq "ARRAY";
 
         my @uris =
@@ -278,7 +278,7 @@ sub _build_auth_header_common {
 
 sub _build_basic_auth_header {
     my ( $c, $opts ) = @_;
-    return $c->_join_auth_header_parts( Basic => $c->_build_auth_header_common );
+    return $c->_join_auth_header_parts( Basic => $c->_build_auth_header_common( $opts ) );
 }
 
 sub _build_digest_auth_header {

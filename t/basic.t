@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::MockObject::Extends;
 use Test::MockObject;
 use Test::Exception;
@@ -40,8 +40,9 @@ lives_ok {
 $req_headers->clear;
 $c->clear;
 throws_ok {
-    $c->authorization_required;
+    $c->authorization_required( realm => "foo" );
 } qr/^ $Catalyst::DETACH $/x, "detached on no authorization required with bad auth";
 is( $status, 401, "401 status code" );
 like( ($res_headers->header('WWW-Authenticate'))[0], qr/^Digest/, "WWW-Authenticate header set: digest");
 like( ($res_headers->header('WWW-Authenticate'))[1], qr/^Basic/, "WWW-Authenticate header set: basic");
+like( ($res_headers->header('WWW-Authenticate'))[1], qr/realm=foo/, "WWW-Authenticate header set: basic with realm");
