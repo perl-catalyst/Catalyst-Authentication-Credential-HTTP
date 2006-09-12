@@ -1,0 +1,5 @@
+0.07
+    - Applied Ton Voon's patch that fixed option propagation for basic auth.
+
+0.06
+    - Refactored internals into smaller methods
