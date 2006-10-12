@@ -366,7 +366,7 @@ __END__
 =head1 NAME
 
 Catalyst::Plugin::Authentication::Credential::HTTP - HTTP Basic and Digest authentication
-for Catlayst.
+for Catalyst.
 
 =head1 SYNOPSIS
 

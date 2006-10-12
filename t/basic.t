@@ -24,6 +24,7 @@ my $cache = Test::MockObject->new;
 $cache->mock(set => sub { shift->{$_[0]} = $_[1] });
 $cache->mock(get => sub { return shift->{$_[0]} });
 $c->mock(cache => sub { $cache });
+$c->mock(debug => sub { 0 });
 my @login_info;
 $c->mock( login => sub { shift; @login_info = @_; 1 } );
 $c->set_always( config => {} );
