@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 15;
 use Test::MockObject::Extends;
 use Test::MockObject;
 use Test::Exception;
@@ -17,6 +17,10 @@ $req->set_always( headers => $req_headers );
 my $res = Test::MockObject->new;
 my $status;
 $res->mock(status => sub { $status = $_[1] });
+my $content_type;
+$res->mock(content_type => sub { $content_type = $_[1] });
+my $body;
+$res->mock(body => sub { $body = $_[1] });
 my $res_headers = HTTP::Headers->new;
 $res->set_always( headers => $res_headers );
 my $c = Test::MockObject::Extends->new( $m );
@@ -44,6 +48,8 @@ throws_ok {
     $c->authorization_required( realm => "foo" );
 } qr/^ $Catalyst::DETACH $/x, "detached on no authorization required with bad auth";
 is( $status, 401, "401 status code" );
+is( $content_type, 'text/plain' );
+is( $body, 'Authorization required.' );
 like( ($res_headers->header('WWW-Authenticate'))[0], qr/^Digest/, "WWW-Authenticate header set: digest");
 like( ($res_headers->header('WWW-Authenticate'))[1], qr/^Basic/, "WWW-Authenticate header set: basic");
 like( ($res_headers->header('WWW-Authenticate'))[1], qr/realm=foo/, "WWW-Authenticate header set: basic with realm");
