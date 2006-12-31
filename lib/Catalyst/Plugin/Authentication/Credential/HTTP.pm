@@ -195,6 +195,10 @@ sub authorization_required_response {
     my ( $c, %opts ) = @_;
 
     $c->res->status(401);
+    $c->res->content_type('text/plain');
+    $c->res->body($c->config->{authentication}{http}{authorization_required_message} || 
+                  $opts{authorization_required_message} || 
+                  'Authorization required.');
 
     # *DONT* short circuit
     my $ok;
@@ -372,7 +376,7 @@ for Catalyst.
 
     use Catalyst qw/
         Authentication
-        Authentication::Store::Moose
+        Authentication::Store::Minimal
         Authentication::Credential::HTTP
     /;
 
@@ -407,6 +411,26 @@ This moduule lets you use HTTP authentication with
 L<Catalyst::Plugin::Authentication>. Both basic and digest authentication
 are currently supported.
 
+When authentication is required, this module sets a status of 401, and
+the body of the response to 'Authorization required.'. To override
+this and set your own content, check for the C<< $c->res->status ==
+401 >> in your C<end> action, and change the body accordingly.
+
+=head2 TERMS
+
+=over 4
+
+=item Nonce
+
+A nonce is a one-time value sent with each digest authentication
+request header. The value must always be unique, so per default the
+last value of the nonce is kept using L<Catalyst::Plugin::Cache>. To
+change this behaviour, override the
+C<store_digest_authorization_nonce> and
+C<get_digest_authorization_nonce> methods as shown below.
+
+=back
+
 =head1 METHODS
 
 =over 4
@@ -423,7 +447,7 @@ This method just passes the options through untouched.
 Looks inside C<< $c->request->headers >> and processes the digest and basic
 (badly named) authorization header.
 
-This will only try the methods set in the configuration.
+This will only try the methods set in the configuration. First digest, then basic.
 
 See the next two methods for what %opts can contain.
 
@@ -478,7 +502,20 @@ Can be either C<any> (the default), C<basic> or C<digest>.
 This controls C<authorization_required_response> and C<authenticate_http>, but
 not the "manual" methods.
 
+=item authorization_required_message
+
+Set this to a string to override the default body content "Authorization required."
+
 =back
+
+=head1 RESTRICTIONS
+
+When using digest authentication, this module will only work together
+with authentication stores whose User objects have a C<password>
+method that returns the plain-text password. It will not work together
+with L<Catalyst::Authentication::Store::Htpasswd>, or
+L<Catalyst::Plugin::Authentication::Store::DBIC> stores whose
+C<password> methods return a hashed or salted version of the password.
 
 =head1 AUTHORS
 
@@ -487,6 +524,10 @@ Yuval Kogman, C<nothingmuch@woobling.org>
 Jess Robinson
 
 Sascha Kiefer C<esskar@cpan.org>
+
+=head1 SEE ALSO
+
+RFC 2617 (or its successors), L<Catalyst::Plugin::Cache>, L<Catalyst::Plugin::Authentication>
 
 =head1 COPYRIGHT & LICENSE
 
