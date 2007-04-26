@@ -11,7 +11,7 @@ use URI::Escape    ();
 use Catalyst       ();
 use Digest::MD5    ();
 
-our $VERSION = "0.09";
+our $VERSION = "0.10";
 
 sub authenticate_http {
     my ( $c, @args ) = @_;
@@ -480,6 +480,8 @@ Set or get the C<$nonce> object used by the digest auth mode.
 
 You may override these methods. By default they will call C<get> and C<set> on
 C<< $c->cache >>.
+
+=item get_http_auth_store %opts
 
 =back
 

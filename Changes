@@ -1,9 +1,17 @@
-0.08
+0.10  2007-04-26
+    - switch to Module::Install
+
+0.09  2006-12-31
+    - clean up tests
+    - clean up docs
+    - add body to 401 status
+
+0.08  2006-10-12
     - Fix basic test when using Test::MockObject 1.07 (die if using undefined
       interfaces)
 
-0.07
+0.07  2006-09-12
     - Applied Ton Voon's patch that fixed option propagation for basic auth.
 
-0.06
+0.06  2006-09-07
     - Refactored internals into smaller methods
