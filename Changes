@@ -1,3 +1,7 @@
+0.11  2008-06-03
+   - Rename to remove Plugin from namespace. The Plugin version is now a wrapper with a deprecation notice.
+   - Change the test suite to use C::P::Cache rather than C::P::Cache::FileCache
+
 0.10  2007-04-26
     - switch to Module::Install
 
