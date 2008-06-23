@@ -7,7 +7,7 @@ use Test::MockObject;
 use Test::Exception;
 use HTTP::Headers;
 
-my $m; BEGIN { use_ok($m = "Catalyst::Authentication::Credential::HTTP") }
+my $m; BEGIN { use_ok($m = "Catalyst::Plugin::Authentication::Credential::HTTP") }
 can_ok( $m, "authenticate_http" );
 can_ok( $m, "authorization_required" );
 can_ok( $m, "authorization_required_response" );
