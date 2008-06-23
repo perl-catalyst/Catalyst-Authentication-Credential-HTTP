@@ -6,9 +6,12 @@ BEGIN {
     eval { require Test::WWW::Mechanize::Catalyst }
       or plan skip_all =>
       "Test::WWW::Mechanize::Catalyst is needed for this test";
-    eval { require Catalyst::Plugin::Cache::FileCache }
+    eval { require Catalyst::Plugin::Cache }
       or plan skip_all =>
-      "Catalyst::Plugin::Cache::FileCache is needed for this test";
+      "Catalyst::Plugin::Cache is needed for this test";
+        eval { require Cache::FileCache }
+      or plan skip_all =>
+      "Cache::FileCache is needed for this test";
     plan tests => 4;
 }
 use HTTP::Request;
@@ -18,7 +21,7 @@ use HTTP::Request;
       Authentication
       Authentication::Store::Minimal
       Authentication::Credential::HTTP
-      Cache::FileCache
+      Cache
       /;
     use Test::More;
     our $users;
@@ -27,6 +30,9 @@ use HTTP::Request;
         $c->authorization_required( realm => 'testrealm@host.com' );
         $c->res->body( $c->user->id );
     }
+    __PACKAGE__->config->{cache}{backend} = {
+        class => 'Cache::FileCache',
+    };
     __PACKAGE__->config->{authentication}{http}{type} = 'digest';
     __PACKAGE__->config->{authentication}{users} = $users = {
         Mufasa => { password         => "Circle Of Life", },

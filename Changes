@@ -1,3 +1,6 @@
+0.11 2008-XX-XX
+    - Changed cache modules used in the tests to not be deprecated.
+
 0.10  2007-04-26
     - switch to Module::Install
 
