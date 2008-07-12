@@ -11,7 +11,7 @@ use URI::Escape    ();
 use Catalyst       ();
 use Digest::MD5    ();
 
-our $VERSION = "0.10";
+our $VERSION = "0.11";
 
 sub authenticate_http {
     my ( $c, @args ) = @_;
@@ -247,7 +247,9 @@ sub _build_auth_header_realm {
     my ( $c, $opts ) = @_;    
 
     if ( my $realm = $opts->{realm} ) {
-        return 'realm=' . String::Escape::qprintable($realm);
+       my $realm_name = String::Escape::qprintable($realm); 
+       $realm_name =~ s/"/\\"/g;
+       return 'realm="' . $realm_name . '"';
     } else {
         return;
     }

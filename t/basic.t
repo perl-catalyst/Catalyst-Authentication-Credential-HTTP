@@ -52,4 +52,5 @@ is( $content_type, 'text/plain' );
 is( $body, 'Authorization required.' );
 like( ($res_headers->header('WWW-Authenticate'))[0], qr/^Digest/, "WWW-Authenticate header set: digest");
 like( ($res_headers->header('WWW-Authenticate'))[1], qr/^Basic/, "WWW-Authenticate header set: basic");
-like( ($res_headers->header('WWW-Authenticate'))[1], qr/realm=foo/, "WWW-Authenticate header set: basic with realm");
+like( ($res_headers->header('WWW-Authenticate'))[1], qr/realm="foo"/, "WWW-Authenticate header set: basic with realm");
+
