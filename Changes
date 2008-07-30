@@ -1,4 +1,12 @@
-0.11 2008-11-12
+1.000  2008-??-??
+   - Rename to remove Plugin from namespace. This is a pretty breaking change,
+     as lots of things work differently with the new auth refactor.
+   - Pull out some functionality which I think is better in other 
+     modules (realms/stores). With the auth refactor, this module didn't need
+     to do so much. If anyone misses any of the functionality, please yell at
+     me and I'll put it back.
+
+0.11  2008-07-12
     - Changed cache modules used in the tests to not be deprecated.
     - Fix RT#31036, and comply with RFC2617 Section 1.2.
 

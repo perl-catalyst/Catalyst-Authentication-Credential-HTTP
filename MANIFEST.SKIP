@@ -21,3 +21,5 @@
 \#$
 \b\.#
 ^..*\.sw[po]$
+# Avoid ShipIt configuration
+.shipit

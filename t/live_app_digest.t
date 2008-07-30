@@ -9,7 +9,7 @@ BEGIN {
     eval { require Catalyst::Plugin::Cache }
       or plan skip_all =>
       "Catalyst::Plugin::Cache is needed for this test";
-        eval { require Cache::FileCache }
+    eval { require Cache::FileCache }
       or plan skip_all =>
       "Cache::FileCache is needed for this test";
     plan tests => 4;
@@ -19,24 +19,35 @@ use HTTP::Request;
     package AuthTestApp;
     use Catalyst qw/
       Authentication
-      Authentication::Store::Minimal
-      Authentication::Credential::HTTP
       Cache
       /;
     use Test::More;
-    our $users;
+    our %users;
     sub moose : Local {
         my ( $self, $c ) = @_;
-        $c->authorization_required( realm => 'testrealm@host.com' );
+        #$c->authenticate( { realm => 'testrealm@host.com' } );
+        $c->authenticate();
         $c->res->body( $c->user->id );
     }
+    %users = ( Mufasa => { password         => "Circle Of Life", }, );
     __PACKAGE__->config->{cache}{backend} = {
         class => 'Cache::FileCache',
     };
-    __PACKAGE__->config->{authentication}{http}{type} = 'digest';
-    __PACKAGE__->config->{authentication}{users} = $users = {
-        Mufasa => { password         => "Circle Of Life", },
-    };
+    __PACKAGE__->config( authentication => {
+        default_realm => 'testrealm@host.com',
+        realms => {
+            'testrealm@host.com' => {
+                store => {
+                    class => 'Minimal',
+                    users => \%users,
+                },
+                credential => {
+                    class => 'HTTP',
+                    type  => 'digest',
+                },
+            },
+        },
+    });
     __PACKAGE__->setup;
 }
 use Test::WWW::Mechanize::Catalyst qw/AuthTestApp/;
@@ -82,3 +93,4 @@ $r->headers->push_header( Authorization => $response );
 $mech->request($r);
 is( $mech->status, 200, "status is 200" );
 $mech->content_contains( "Mufasa", "Mufasa output" );
+
