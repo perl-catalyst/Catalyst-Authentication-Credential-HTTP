@@ -1,4 +1,15 @@
-1.000  2008-??-??
+1.002  2008-09-03
+   - Fix the assumptions that the password field is named password when doing 
+     digest auth.
+
+1.001  2008-09-02
+   - Fix some of the assumptions about the user class by inheriting from the
+     Catalyst::Authentication::Credential::Password module. This should make
+     using DBIC as a store work correctly for basic auth.
+   - Updated synopsis and todo list, this module still needs some work before
+     it's ready for prime time again..
+
+1.000  2008-09-01
    - Rename to remove Plugin from namespace. This is a pretty breaking change,
      as lots of things work differently with the new auth refactor.
    - Pull out some functionality which I think is better in other 

@@ -29,7 +29,7 @@ use HTTP::Request;
         $c->authenticate();
         $c->res->body( $c->user->id );
     }
-    %users = ( Mufasa => { password         => "Circle Of Life", }, );
+    %users = ( Mufasa => { pass         => "Circle Of Life", }, );
     __PACKAGE__->config->{cache}{backend} = {
         class => 'Cache::FileCache',
     };
@@ -44,6 +44,8 @@ use HTTP::Request;
                 credential => {
                     class => 'HTTP',
                     type  => 'digest',
+                    password_type => 'clear', 
+                    password_field => 'pass'
                 },
             },
         },
