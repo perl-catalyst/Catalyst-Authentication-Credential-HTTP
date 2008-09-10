@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 24;
+use Test::More tests => 28;
 use Test::MockObject::Extends;
 use Test::MockObject;
 use Test::Exception;
@@ -113,3 +113,29 @@ is( $body, 'Authorization required.' );
 like( ($res_headers->header('WWW-Authenticate'))[0], qr/realm="myrealm"/, "WWW-Authenticate header set: digest realm overridden");
 like( ($res_headers->header('WWW-Authenticate'))[1], qr/realm="myrealm"/, "WWW-Authenticate header set: basic realm overridden");
 
+# Check authorization_required_message works
+$req_headers->clear;
+$res_headers->clear;
+$c->clear;
+{
+    my $self = new_self( type => 'any', password_type => 'clear',
+        authorization_required_message => 'foobar'
+    );
+    throws_ok {
+        $self->authenticate( $c, $realm );
+    } qr/^ $Catalyst::DETACH $/x, "detached";
+    is( $body, 'foobar', 'Body is supplied auth message');
+}
+
+$req_headers->clear;
+$res_headers->clear;
+$c->clear;
+{
+    my $self = new_self( type => 'any', password_type => 'clear',
+        authorization_required_message => undef
+    );
+    throws_ok {
+        $self->authenticate( $c, $realm );
+    } qr/^ $Catalyst::DETACH $/x, "detached";
+    is( $body, undef, 'Body is not set - user overrode auth message');
+}

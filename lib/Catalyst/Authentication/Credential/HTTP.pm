@@ -477,15 +477,9 @@ The %auth_info hash can contain a number of keys which control the authenticatio
 Sets the HTTP authentication realm presented to the client. Note this does not alter the
 Catalyst::Authentication::Realm object used for the authentication.
 
-=item password_type
+=item domain
 
-The type of password returned by the user object. Same useage as in 
-L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/passwprd_type>
-
-=item password_field
-
-The name of accessor used to retrieve the value of the password field from the user object. Same useage as in 
-L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/password_field>
+Array reference to domains used to build the authorization headers.
 
 =back
 
@@ -525,7 +519,7 @@ All configuration is stored in C<< YourApp->config(authentication => { yourrealm
 
 This should be a hash, and it can contain the following entries:
 
-=over 4
+=over
 
 =item type
 
@@ -537,6 +531,21 @@ not the "manual" methods.
 =item authorization_required_message
 
 Set this to a string to override the default body content "Authorization required.", or set to undef to suppress body content being generated.
+
+=item password_type
+
+The type of password returned by the user object. Same useage as in 
+L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/passwprd_type>
+
+=item password_field
+
+The name of accessor used to retrieve the value of the password field from the user object. Same useage as in 
+L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/password_field>
+
+=item use_uri_for
+
+If this configuration key has a true value, then the domain(s) for the authorization header will be
+run through $c->uri_for()
 
 =back
 
