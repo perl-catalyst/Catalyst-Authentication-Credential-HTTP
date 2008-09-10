@@ -410,6 +410,16 @@ for Catalyst.
 
         do_stuff();
     }
+    
+    sub always_auth : Local {
+        my ( $self, $c ) = @_;
+        
+        # Force authorization headers onto the response so that the user
+        # is asked again for authentication, even if they successfully
+        # authenticated.
+        my $realm = $c->get_auth_realm('example');
+        $realm->credential->authorization_required_response($c, $realm);
+    }
 
     # with ACL plugin
     __PACKAGE__->deny_access_unless("/path", sub { $_[0]->authenticate });

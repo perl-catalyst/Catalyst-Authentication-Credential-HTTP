@@ -3,6 +3,8 @@
      when calling $c->authenticate. Docs and tests for this.
    - Clean up documentation of options inherited from 
      Catalyst::Authentication::Credential::Password
+   - Added an example of calling methods in the credential module from a 
+     controller to the POD.
 
 1.002  2008-09-03
    - Fix the assumptions that the password field is named password when doing 

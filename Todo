@@ -1,6 +1,4 @@
 . Document md5'd passwords for digest stuff
-. Port work's apps.
-. Document how to find the credential module, so that you can call authorization_required_response if you want to.
 . Add deprecation notice to old module.
 . document & test authorization_required_message
 . Test $self->_config->{authorization_required_message} + authorization_required_message = undef does not stamp on body.
