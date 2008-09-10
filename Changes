@@ -1,3 +1,9 @@
+1.003  2008-09-??
+   - Add ability to override the realm name presented for authentication
+     when calling $c->authenticate. Docs and tests for this.
+   - Clean up documentation of options inherited from 
+     Catalyst::Authentication::Credential::Password
+
 1.002  2008-09-03
    - Fix the assumptions that the password field is named password when doing 
      digest auth.

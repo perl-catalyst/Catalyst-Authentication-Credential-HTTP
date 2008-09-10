@@ -74,6 +74,7 @@ is_deeply( $find_user_opts, { username => 'foo'}, "login delegated");
 
 # Test all the headers look good.
 $req_headers->clear;
+$res_headers->clear;
 $c->clear;
 throws_ok {
     $self->authenticate( $c, $realm );
@@ -86,6 +87,7 @@ like( ($res_headers->header('WWW-Authenticate'))[0], qr/realm="foo"/, "WWW-Authe
 like( ($res_headers->header('WWW-Authenticate'))[1], qr/^Basic/, "WWW-Authenticate header set: basic");
 like( ($res_headers->header('WWW-Authenticate'))[1], qr/realm="foo"/, "WWW-Authenticate header set: basic realm");
 
+$res_headers->clear;
 # Check password_field works
 {
     my $self = new_self( type => 'any', password_type => 'clear', password_field => 'the_other_password' );
@@ -101,14 +103,13 @@ like( ($res_headers->header('WWW-Authenticate'))[1], qr/realm="foo"/, "WWW-Authe
 }
 
 $req_headers->clear;
+$res_headers->clear;
 throws_ok {
     $self->authenticate( $c, $realm, { realm => 'myrealm' }); # Override realm object's name method by doing this.
 } qr/^ $Catalyst::DETACH $/x, "detached on no authorization supplied, overridden realm value";
 is( $status, 401, "401 status code" );
 is( $content_type, 'text/plain' );
 is( $body, 'Authorization required.' );
-TODO: {
-    local $TODO = 'This should work, it (or something very like it) used to work';
-    like( ($res_headers->header('WWW-Authenticate'))[0], qr/realm="myrealm"/, "WWW-Authenticate header set: digest realm overridden");
-    like( ($res_headers->header('WWW-Authenticate'))[1], qr/realm="myrealm"/, "WWW-Authenticate header set: basic realm overridden");
-}
+like( ($res_headers->header('WWW-Authenticate'))[0], qr/realm="myrealm"/, "WWW-Authenticate header set: digest realm overridden");
+like( ($res_headers->header('WWW-Authenticate'))[1], qr/realm="myrealm"/, "WWW-Authenticate header set: basic realm overridden");
+

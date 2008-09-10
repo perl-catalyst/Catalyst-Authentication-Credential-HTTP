@@ -248,10 +248,8 @@ sub _create_basic_auth_response {
 }
 
 sub _build_auth_header_realm {
-    my ( $self ) = @_;    
-
-    if ( my $realm = $self->realm ) {
-        my $realm_name = String::Escape::qprintable($realm->name);
+    my ( $self, $c, $opts ) = @_;    
+    if ( my $realm_name = String::Escape::qprintable($opts->{realm} ? $opts->{realm} : $self->realm->name) ) {
         $realm_name = qq{"$realm_name"} unless $realm_name =~ /^"/;
         return 'realm=' . $realm_name;
     } 
@@ -279,7 +277,7 @@ sub _build_auth_header_common {
     my ( $self, $c, $opts ) = @_;
 
     return (
-        $self->_build_auth_header_realm(),
+        $self->_build_auth_header_realm($c, $opts),
         $self->_build_auth_header_domain($c, $opts),
     );
 }
@@ -406,6 +404,9 @@ for Catalyst.
 
         $c->authenticate({ realm => "example" }); 
         # either user gets authenticated or 401 is sent
+        # Note that the authentication realm sent to the client is overridden
+        # here, but this does not affect the Catalyst::Authentication::Realm
+        # used for authentication.
 
         do_stuff();
     }
@@ -457,15 +458,35 @@ Looks inside C<< $c->request->headers >> and processes the digest and basic
 
 This will only try the methods set in the configuration. First digest, then basic.
 
-This method just passes the options through untouched. See the next two methods for what \%auth_info can contain.
+The %auth_info hash can contain a number of keys which control the authentication behaviour:
+
+=over
+
+=item realm
+
+Sets the HTTP authentication realm presented to the client. Note this does not alter the
+Catalyst::Authentication::Realm object used for the authentication.
+
+=item password_type
+
+The type of password returned by the user object. Same useage as in 
+L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/passwprd_type>
+
+=item password_field
+
+The name of accessor used to retrieve the value of the password field from the user object. Same useage as in 
+L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/password_field>
+
+=back
 
 =item authenticate_basic $c, $realm, \%auth_info
 
-Acts like L<Catalyst::Authentication::Credential::Password>, and will lookup the user's password as detailed in that module.
+Performs HTTP basic authentication.
 
 =item authenticate_digest $c, $realm, \%auth_info
 
-Assumes that your user object has a hard coded method which returns a clear text password.
+Performs HTTP digest authentication. Note that the password_type B<must> by I<clear> for
+digest authentication to succeed.
 
 =item authorization_required_response $c, $realm, \%auth_info
 
