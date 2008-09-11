@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 31;
 use Test::MockObject::Extends;
 use Test::MockObject;
 use Test::Exception;
@@ -127,6 +127,8 @@ $c->clear;
     is( $body, 'foobar', 'Body is supplied auth message');
 }
 
+# Check undef authorization_required_message suppresses crapping in
+# the body.
 $req_headers->clear;
 $res_headers->clear;
 $c->clear;
@@ -138,4 +140,19 @@ $c->clear;
         $self->authenticate( $c, $realm );
     } qr/^ $Catalyst::DETACH $/x, "detached";
     is( $body, undef, 'Body is not set - user overrode auth message');
+}
+
+# Check domain config works
+$req_headers->clear;
+$res_headers->clear;
+$c->clear;
+{
+    my $self = new_self( type => 'any', password_type => 'clear',
+        #use_uri_for => 1,
+    );
+    throws_ok {
+        $self->authenticate( $c, $realm, {domain => [qw/dom1 dom2/]} );
+    } qr/^ $Catalyst::DETACH $/x, "detached";
+    like( ($res_headers->header('WWW-Authenticate'))[0], qr/domain="dom1 dom2"/, "WWW-Authenticate header set: digest domains set");
+    like( ($res_headers->header('WWW-Authenticate'))[1], qr/domain="dom1 dom2"/, "WWW-Authenticate header set: basic domains set");
 }

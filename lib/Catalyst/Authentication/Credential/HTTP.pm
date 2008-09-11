@@ -13,7 +13,7 @@ BEGIN {
     __PACKAGE__->mk_accessors(qw/_config realm/);
 }
 
-our $VERSION = "1.002";
+our $VERSION = "1.003";
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
@@ -258,7 +258,6 @@ sub _build_auth_header_realm {
 
 sub _build_auth_header_domain {
     my ( $self, $c, $opts ) = @_;
-
     if ( my $domain = $opts->{domain} ) {
         Catalyst::Exception->throw("domain must be an array reference")
           unless ref($domain) && ref($domain) eq "ARRAY";
@@ -275,7 +274,7 @@ sub _build_auth_header_domain {
 
 sub _build_auth_header_common {
     my ( $self, $c, $opts ) = @_;
-
+warn("HERE Opts $opts");
     return (
         $self->_build_auth_header_realm($c, $opts),
         $self->_build_auth_header_domain($c, $opts),
@@ -534,12 +533,12 @@ Set this to a string to override the default body content "Authorization require
 
 =item password_type
 
-The type of password returned by the user object. Same useage as in 
+The type of password returned by the user object. Same usage as in 
 L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/passwprd_type>
 
 =item password_field
 
-The name of accessor used to retrieve the value of the password field from the user object. Same useage as in 
+The name of accessor used to retrieve the value of the password field from the user object. Same usage as in 
 L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/password_field>
 
 =item use_uri_for

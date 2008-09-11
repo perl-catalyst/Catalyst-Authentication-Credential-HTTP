@@ -1,4 +1,4 @@
-1.003  2008-09-??
+1.003  2008-09-11
    - Add ability to override the realm name presented for authentication
      when calling $c->authenticate. Documentation and tests for this.
    - Clean up documentation of options inherited from 
@@ -7,7 +7,8 @@
      controller to the POD.
    - Tests for the authorization_required_message configuration parameter. 
    - Document use_uri_for configuration option
-   - Document domain option (passed through from $c->authenticate)
+   - Document domain option (passed through from $c->authenticate) and add 
+     tests for this option.
 
 1.002  2008-09-03
    - Fix the assumptions that the password field is named password when doing 
