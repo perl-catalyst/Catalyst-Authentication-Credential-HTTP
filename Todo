@@ -1,5 +1,4 @@
-. Document md5'd passwords for digest stuff
-. Add deprecation notice to old module.
 . Split auth headers / do auth methods again, and make authenticate call each in turn.
-. Document / test 'algorithm' config.
-. Test and document use_uri_for config & domain
+. Document / test 'algorithm' config - MD5-sess / MD5.
+. Better documentation for 'domain' option.
+. Domain option should be able to be passed as config.

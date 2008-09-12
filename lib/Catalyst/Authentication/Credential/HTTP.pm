@@ -13,7 +13,7 @@ BEGIN {
     __PACKAGE__->mk_accessors(qw/_config realm/);
 }
 
-our $VERSION = "1.003";
+our $VERSION = "1.004";
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
@@ -143,7 +143,6 @@ sub authenticate_digest {
         # we can store md5_hex("$username:$realm:$password") instead
         my $password_field = $self->_config->{password_field};
         for my $r ( 0 .. 1 ) {
-            # FIXME - Do not assume accessor is called password.
             # calculate H(A1) as per spec
             my $A1_digest = $r ? $user->$password_field() : do {
                 $ctx = Digest::MD5->new;
@@ -274,7 +273,6 @@ sub _build_auth_header_domain {
 
 sub _build_auth_header_common {
     my ( $self, $c, $opts ) = @_;
-warn("HERE Opts $opts");
     return (
         $self->_build_auth_header_realm($c, $opts),
         $self->_build_auth_header_domain($c, $opts),
@@ -489,7 +487,11 @@ Performs HTTP basic authentication.
 =item authenticate_digest $c, $realm, \%auth_info
 
 Performs HTTP digest authentication. Note that the password_type B<must> by I<clear> for
-digest authentication to succeed.
+digest authentication to succeed, and you must have L<Catalyst::Plugin::Session> in
+your application as digest authentication needs to store persistent data.
+
+Note - if you do not want to store your user passwords as clear text, then it is possible
+to store instead the MD5 digest in hex of the string '$username:$realm:$password' 
 
 =item authorization_required_response $c, $realm, \%auth_info
 

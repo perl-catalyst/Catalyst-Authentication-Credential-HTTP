@@ -1,3 +1,9 @@
+1.004  2008-09-12
+   - Add tests for use_uri_for configuration options.
+   - Add tests and documentation for storing an MD5
+     of "$user:$relam:$password" instead of cleartext password
+     when doing digest auth.
+
 1.003  2008-09-11
    - Add ability to override the realm name presented for authentication
      when calling $c->authenticate. Documentation and tests for this.

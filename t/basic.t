@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 31;
+use Test::More tests => 34;
 use Test::MockObject::Extends;
 use Test::MockObject;
 use Test::Exception;
@@ -34,6 +34,8 @@ my $c = Test::MockObject->new;
 my $cache = Test::MockObject->new;
 $cache->mock(set => sub { shift->{$_[0]} = $_[1] });
 $cache->mock(get => sub { return shift->{$_[0]} });
+my $uri_for_called = 0;
+$c->mock(uri_for => sub { my ($c, $uri) = @_; $uri_for_called++; return 'uri_for:' . $uri} );
 $c->mock(cache => sub { $cache });
 $c->mock(debug => sub { 0 });
 my @login_info;
@@ -147,12 +149,25 @@ $req_headers->clear;
 $res_headers->clear;
 $c->clear;
 {
-    my $self = new_self( type => 'any', password_type => 'clear',
-        #use_uri_for => 1,
-    );
+    my $self = new_self( type => 'any', password_type => 'clear');
     throws_ok {
         $self->authenticate( $c, $realm, {domain => [qw/dom1 dom2/]} );
     } qr/^ $Catalyst::DETACH $/x, "detached";
     like( ($res_headers->header('WWW-Authenticate'))[0], qr/domain="dom1 dom2"/, "WWW-Authenticate header set: digest domains set");
     like( ($res_headers->header('WWW-Authenticate'))[1], qr/domain="dom1 dom2"/, "WWW-Authenticate header set: basic domains set");
+}
+
+# Check domain config works with use_uri_for option
+$req_headers->clear;
+$res_headers->clear;
+$c->clear;
+{
+    my $self = new_self( type => 'any', password_type => 'clear', use_uri_for => 1);
+    throws_ok {
+        $self->authenticate( $c, $realm, {domain => [qw/dom1 dom2/]} );
+    } qr/^ $Catalyst::DETACH $/x, "detached";
+    like( ($res_headers->header('WWW-Authenticate'))[0], qr/domain="uri_for:dom1 uri_for:dom2"/, 
+        "WWW-Authenticate header set: digest domains set with use_uri_for");
+    like( ($res_headers->header('WWW-Authenticate'))[1], qr/domain="uri_for:dom1 uri_for:dom2"/, 
+        "WWW-Authenticate header set: basic domains set with use_uri_for");
 }
