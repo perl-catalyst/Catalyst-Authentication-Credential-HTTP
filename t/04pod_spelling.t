@@ -21,3 +21,8 @@ Kogman
 Yuval
 auth
 username
+Authorization
+authorization
+sess
+init
+ok

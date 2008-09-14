@@ -23,12 +23,17 @@ sub new {
     
     $self->realm($realm);
     
+    $self->init;
+    return $self;
+}    
+
+sub init {
+    my ($self) = @_;
     my $type = $self->_config->{'type'} ||= 'any';
     
     if (!grep /$type/, ('basic', 'digest', 'any')) {
         Catalyst::Exception->throw(__PACKAGE__ . " used with unsupported authentication type: " . $type);
     }
-    return $self;
 }
 
 sub authenticate {
@@ -454,6 +459,10 @@ C<get_digest_authorization_nonce> methods as shown below.
 =item new $config, $c, $realm
 
 Simple constructor.
+
+=item init
+
+Validates that $config is ok.
 
 =item authenticate $c, $realm, \%auth_info
 
