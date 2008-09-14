@@ -478,6 +478,20 @@ Catalyst::Authentication::Realm object used for the authentication.
 
 Array reference to domains used to build the authorization headers.
 
+This list of domains defines the protection space. If a domain URI is an 
+absolute path (starts with /), it is relative to the root URL of the server being accessed. 
+An absolute URI in this list may refer to a different server than the one being accessed. 
+
+The client will use this list to determine the set of URIs for which the same authentication 
+information may be sent. 
+
+If this is omitted or its value is empty, the client will assume that the
+protection space consists of all URIs on the responding server.
+
+Therefore, if your application is not hosted at the root of this domain, and you want to
+prevent the authentication credentials for this application being sent to any other applications.
+then you should use the I<use_uri_for> configuration option, and pass a domain of I</>.
+
 =back
 
 =item authenticate_basic $c, $realm, \%auth_info
@@ -492,6 +506,9 @@ your application as digest authentication needs to store persistent data.
 
 Note - if you do not want to store your user passwords as clear text, then it is possible
 to store instead the MD5 digest in hex of the string '$username:$realm:$password' 
+
+Takes an additional parameter of I<algorithm>, the possible values of which are 'MD5' (the default)
+and 'MD5-sess'. For more information about 'MD5-sess', see section 3.2.2.2 in RFC 2617.
 
 =item authorization_required_response $c, $realm, \%auth_info
 
@@ -546,7 +563,9 @@ L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Crede
 =item use_uri_for
 
 If this configuration key has a true value, then the domain(s) for the authorization header will be
-run through $c->uri_for()
+run through $c->uri_for(). Use this configuration option if your application is not running at the root
+of your domain, and you want to ensure that authentication credentials from your application are not shared with
+other applications on the same server.
 
 =back
 
