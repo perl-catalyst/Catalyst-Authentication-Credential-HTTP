@@ -10,6 +10,7 @@ requires 'String::Escape';
 requires 'Test::Exception';
 requires 'Test::MockObject';
 requires 'URI::Escape';
+requires 'Class::Accessor::Fast';
 
 auto_install;
 WriteAll;
