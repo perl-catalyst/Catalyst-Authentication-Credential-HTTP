@@ -562,7 +562,7 @@ Set this to a string to override the default body content "Authorization require
 =item password_type
 
 The type of password returned by the user object. Same usage as in 
-L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/passwprd_type>
+L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/password_type>
 
 =item password_field
 
