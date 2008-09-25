@@ -1,7 +1,8 @@
-1.005  2008-09-XX
+1.005  2008-09-25
   - Added better description of the use of the domains and
     use_uri_for options (info culled from RFC2617).
-  - Split init method out to make this module easier to sub-class.
+  - Split init method out to make this module easier to sub-class
+    (used by Catalyst::Authentication::HTTP::Proxy).
 
 1.004  2008-09-12
    - Add tests for use_uri_for configuration options.

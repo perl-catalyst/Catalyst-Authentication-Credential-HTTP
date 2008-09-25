@@ -13,7 +13,7 @@ BEGIN {
     __PACKAGE__->mk_accessors(qw/_config realm/);
 }
 
-our $VERSION = "1.004";
+our $VERSION = "1.005";
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
