@@ -384,6 +384,7 @@ for Catalyst.
     /;
 
     __PACKAGE__->config( authentication => {
+        default_realm => 'example',
         realms => { 
             example => { 
                 credential => { 
