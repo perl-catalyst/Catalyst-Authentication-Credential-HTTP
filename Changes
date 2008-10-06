@@ -1,3 +1,7 @@
+1.006  2008-10-06
+  - Added username_field configuration option. I need this to play
+    nice with Catalyst::Authentication::Store::Tangram.
+
 1.005  2008-09-25
   - Added better description of the use of the domains and
     use_uri_for options (info culled from RFC2617).
