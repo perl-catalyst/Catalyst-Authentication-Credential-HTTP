@@ -408,9 +408,11 @@ for Catalyst.
 
         $c->authenticate({ realm => "example" }); 
         # either user gets authenticated or 401 is sent
-        # Note that the authentication realm sent to the client is overridden
-        # here, but this does not affect the Catalyst::Authentication::Realm
-        # used for authentication.
+        # Note that the authentication realm sent to the client (in the 
+        # RFC 2617 sense) is overridden here, but this *does not* 
+        # effect the Catalyst::Authentication::Realm used for 
+        # authentication - to do that, you need 
+        # $c->authenticate({}, 'otherrealm')
 
         do_stuff();
     }
