@@ -1,3 +1,5 @@
+  - Fix warning when used with self_check => 1
+
 1.006  2008-10-06
   - Added username_field configuration option. I need this to play
     nice with Catalyst::Authentication::Store::Tangram.

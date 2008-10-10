@@ -60,8 +60,11 @@ sub authenticate_basic {
 
     if ( my ( $username, $password ) = $headers->authorization_basic ) {
 	    my $user_obj = $realm->find_user( { $self->_config->{username_field} => $username }, $c);
-	    if (ref($user_obj)) {            
-            if ($self->check_password($user_obj, {$self->_config->{password_field} => $password})) {
+	    if (ref($user_obj)) {
+            my $opts = {};
+            $opts->{$self->_config->{password_field}} = $password 
+                if $self->_config->{password_field};            
+            if ($self->check_password($user_obj, $opts)) {
                 $c->set_authenticated($user_obj);
                 return $user_obj;
             }
