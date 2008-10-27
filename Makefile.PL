@@ -12,6 +12,8 @@ requires 'Test::MockObject';
 requires 'URI::Escape';
 requires 'Class::Accessor::Fast';
 
+resources repository => 'http://dev.catalyst.perl.org/repos/Catalyst/Catalyst-Authentication-Credential-HTTP';
+
 auto_install;
 WriteAll;
 

@@ -1,4 +1,6 @@
+1.007
   - Fix warning when used with self_check => 1
+  - Added respository info to META.yml
 
 1.006  2008-10-06
   - Added username_field configuration option. I need this to play
