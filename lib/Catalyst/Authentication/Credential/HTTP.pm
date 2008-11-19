@@ -13,7 +13,7 @@ BEGIN {
     __PACKAGE__->mk_accessors(qw/_config realm/);
 }
 
-our $VERSION = "1.006";
+our $VERSION = "1.007";
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
@@ -101,7 +101,7 @@ sub authenticate_digest {
         $c->log->debug('Checking authentication parameters.')
           if $c->debug;
 
-        my $uri         = '/' . $c->request->path;
+        my $uri         = $c->request->uri->path_query;
         my $algorithm   = $res{algorithm} || 'MD5';
         my $nonce_count = '0x' . $res{nc};
 
@@ -603,7 +603,7 @@ C<password> methods return a hashed or salted version of the password.
 Updated to current name space and currently maintained
 by: Tomas Doran C<bobtfish@bobtfish.net>.
 
-Original module by: 
+Original module by:
 
 =over
 
@@ -612,6 +612,16 @@ Original module by:
 =item Jess Robinson
 
 =item Sascha Kiefer C<esskar@cpan.org>
+
+=back
+
+=head1 CONTRIBUTORS
+
+Patches contributed by:
+
+=over
+
+=item Peter Corlett
 
 =back
 

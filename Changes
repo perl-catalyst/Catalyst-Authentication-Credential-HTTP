@@ -1,6 +1,9 @@
-1.007
-  - Fix warning when used with self_check => 1
-  - Added respository info to META.yml
+1.007  2008-11-19
+  - Add test for query strings in digest auth as digest header is built using
+    the full URI (t0m)
+  - Fix for this (Peter Corlett)
+  - Fix warning when used with self_check => 1 (t0m)
+  - Added respository info to META.yml (t0m)
 
 1.006  2008-10-06
   - Added username_field configuration option. I need this to play

@@ -12,7 +12,7 @@ BEGIN {
     eval { require Cache::FileCache }
       or plan skip_all =>
       "Cache::FileCache is needed for this test";
-    plan tests => 8;
+    plan tests => 12;
 }
 use Digest::MD5;
 use HTTP::Request;
@@ -62,6 +62,7 @@ use Test::WWW::Mechanize::Catalyst qw/AuthTestApp/;
 
 sub do_test {
     my $username = shift;
+    my $uri = shift;
     my $mech = Test::WWW::Mechanize::Catalyst->new;
     $mech->get("http://localhost/moose");
     is( $mech->status, 401, "status is 401" );
@@ -83,7 +84,7 @@ sub do_test {
         my $nc       = '00000001';
         my $method   = 'GET';
         my $qop      = 'auth';
-        my $uri      = '/moose';
+        $uri         ||= '/moose';
         my $ctx = Digest::MD5->new;
         $ctx->add( join( ':', $username, $realm, $password ) );
         my $A1_digest = $ctx->hexdigest;
@@ -97,7 +98,7 @@ sub do_test {
 
         $response = qq{Digest username="$username", realm="$realm", nonce="$nonce", uri="$uri", qop=$qop, nc=$nc, cnonce="$cnonce", response="$digest", opaque="$opaque"};
     }
-    my $r = HTTP::Request->new( GET => "http://localhost/moose" );
+    my $r = HTTP::Request->new( GET => "http://localhost" . $uri );
     $mech->request($r);
     $r->headers->push_header( Authorization => $response );
     $mech->request($r);
@@ -107,3 +108,4 @@ sub do_test {
 
 do_test('Mufasa');
 do_test('Mufasa2');
+do_test('Mufasa', '/moose?moose_id=1'); # Digest auth includes the full URL path, so need to test query strings
