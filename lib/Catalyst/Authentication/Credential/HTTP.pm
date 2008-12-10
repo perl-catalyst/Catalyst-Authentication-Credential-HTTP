@@ -13,7 +13,7 @@ BEGIN {
     __PACKAGE__->mk_accessors(qw/_config realm/);
 }
 
-our $VERSION = "1.007";
+our $VERSION = '1.008';
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
@@ -65,7 +65,6 @@ sub authenticate_basic {
             $opts->{$self->_config->{password_field}} = $password 
                 if $self->_config->{password_field};            
             if ($self->check_password($user_obj, $opts)) {
-                $c->set_authenticated($user_obj);
                 return $user_obj;
             }
         }
@@ -126,12 +125,12 @@ sub authenticate_digest {
 
         my $username = $res{username};
 
-        my $user;
+        my $user_obj;
 
-        unless ( $user = $auth_info->{user} ) {
-            $user = $realm->find_user( { $self->_config->{username_field} => $username }, $c);
+        unless ( $user_obj = $auth_info->{user} ) {
+            $user_obj = $realm->find_user( { $self->_config->{username_field} => $username }, $c);
         }
-        unless ($user) {    # no user, no authentication
+        unless ($user_obj) {    # no user, no authentication
             $c->log->debug("Unable to locate user matching user info provided") if $c->debug;
             return;
         }
@@ -153,9 +152,9 @@ sub authenticate_digest {
         my $password_field = $self->_config->{password_field};
         for my $r ( 0 .. 1 ) {
             # calculate H(A1) as per spec
-            my $A1_digest = $r ? $user->$password_field() : do {
+            my $A1_digest = $r ? $user_obj->$password_field() : do {
                 $ctx = Digest::MD5->new;
-                $ctx->add( join( ':', $username, $realm->name, $user->$password_field() ) );
+                $ctx->add( join( ':', $username, $realm->name, $user_obj->$password_field() ) );
                 $ctx->hexdigest;
             };
             if ( $nonce->algorithm eq 'MD5-sess' ) {
@@ -173,8 +172,7 @@ sub authenticate_digest {
             $c->cache->set( __PACKAGE__ . '::opaque:' . $nonce->opaque,
                 $nonce );
             if ($rq_digest eq $res{response}) {
-                $c->set_authenticated($user);
-                return 1;
+                return $user_obj;
             }
         }
     }

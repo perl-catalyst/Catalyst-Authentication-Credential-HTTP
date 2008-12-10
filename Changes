@@ -1,3 +1,10 @@
+1.008  2008-12-10
+  - Fix issue with the user not being authenticated into the correct 
+    realm, by not calling $c->set_authenticated ourselves, but instead
+    just returning the user object. Fix suggested by Bernhard Graf. (t0m)
+    - Add test for this (t0m)
+  - Change $user to $user_obj in authenticate_digest for consistency (t0m)
+
 1.007  2008-11-19
   - Add test for query strings in digest auth as digest header is built using
     the full URI (t0m)

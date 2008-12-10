@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 34;
+use Test::More tests => 35;
 use Test::MockObject::Extends;
 use Test::MockObject;
 use Test::Exception;
@@ -25,6 +25,7 @@ $res->mock(body => sub { $body = $_[1] });
 my $res_headers = HTTP::Headers->new;
 $res->set_always( headers => $res_headers );
 my $user = Test::MockObject->new;
+$user->set_isa('Catalyst::Authentication::User');
 $user->mock(get => sub { return shift->{$_[0]} });
 my $find_user_opts;
 my $realm = Test::MockObject->new;
@@ -70,8 +71,12 @@ throws_ok {
 
 # Correct credentials
 $req_headers->authorization_basic( qw/foo bar/ );
-ok($self->authenticate($c, $realm), "auth successful with header");
-is($authenticated, 1, 'authenticated once');
+{
+    my $user = $self->authenticate($c, $realm);
+    ok($user, "auth successful with header");
+    isa_ok $user, 'Catalyst::Authentication::User';
+}
+is($authenticated, 0, 'Not called set_authenticated');
 is_deeply( $find_user_opts, { username => 'foo'}, "login delegated");
 
 # Test all the headers look good.
