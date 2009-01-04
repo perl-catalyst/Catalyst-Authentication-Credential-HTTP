@@ -1,3 +1,10 @@
+1.009  2009-01-04
+   - Remove use of _config accessor, which I'd stupidly cargo-culted. 
+     As we don't ever run in auth back-compat mode, we can store 
+     everything in instance data without worrying about conflicts.
+     Note however - have to keep the accessor itself so that our
+     parent class (which is still stupid and uses it) continues to work.
+
 1.008  2008-12-10
   - Fix issue with the user not being authenticated into the correct 
     realm, by not calling $c->set_authenticated ourselves, but instead

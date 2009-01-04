@@ -9,17 +9,25 @@ use URI::Escape    ();
 use Catalyst       ();
 use Digest::MD5    ();
 
-BEGIN {
-    __PACKAGE__->mk_accessors(qw/_config realm/);
-}
+__PACKAGE__->mk_accessors(qw/
+    _config 
+    authorization_required_message 
+    password_field 
+    username_field 
+    type 
+    realm 
+    algorithm 
+    use_uri_for
+/);
 
-our $VERSION = '1.008';
+our $VERSION = '1.009';
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
     
     $config->{username_field} ||= 'username';
-    my $self = { _config => $config, _debug => $app->debug };
+    # _config is shity back-compat with our base class.
+    my $self = { %$config, _config => $config, _debug => $app->debug };
     bless $self, $class;
     
     $self->realm($realm);
@@ -30,11 +38,12 @@ sub new {
 
 sub init {
     my ($self) = @_;
-    my $type = $self->_config->{'type'} ||= 'any';
+    my $type = $self->type || 'any';
     
     if (!grep /$type/, ('basic', 'digest', 'any')) {
         Catalyst::Exception->throw(__PACKAGE__ . " used with unsupported authentication type: " . $type);
     }
+    $self->type($type);
 }
 
 sub authenticate {
@@ -59,11 +68,11 @@ sub authenticate_basic {
     my $headers = $c->req->headers;
 
     if ( my ( $username, $password ) = $headers->authorization_basic ) {
-	    my $user_obj = $realm->find_user( { $self->_config->{username_field} => $username }, $c);
+	    my $user_obj = $realm->find_user( { $self->username_field => $username }, $c);
 	    if (ref($user_obj)) {
             my $opts = {};
-            $opts->{$self->_config->{password_field}} = $password 
-                if $self->_config->{password_field};            
+            $opts->{$self->password_field} = $password 
+                if $self->password_field;            
             if ($self->check_password($user_obj, $opts)) {
                 return $user_obj;
             }
@@ -128,7 +137,7 @@ sub authenticate_digest {
         my $user_obj;
 
         unless ( $user_obj = $auth_info->{user} ) {
-            $user_obj = $realm->find_user( { $self->_config->{username_field} => $username }, $c);
+            $user_obj = $realm->find_user( { $self->username_field => $username }, $c);
         }
         unless ($user_obj) {    # no user, no authentication
             $c->log->debug("Unable to locate user matching user info provided") if $c->debug;
@@ -149,7 +158,7 @@ sub authenticate_digest {
         # the idea of the for loop:
         # if we do not want to store the plain password in our user store,
         # we can store md5_hex("$username:$realm:$password") instead
-        my $password_field = $self->_config->{password_field};
+        my $password_field = $self->password_field;
         for my $r ( 0 .. 1 ) {
             # calculate H(A1) as per spec
             my $A1_digest = $r ? $user_obj->$password_field() : do {
@@ -189,7 +198,7 @@ sub _check_cache {
 
 sub _is_http_auth_type {
     my ( $self, $type ) = @_;
-    my $cfgtype = lc( $self->_config->{'type'} || 'any' );
+    my $cfgtype = lc( $self->type );
     return 1 if $cfgtype eq 'any' || $cfgtype eq lc $type;
     return 0;
 }
@@ -199,10 +208,10 @@ sub authorization_required_response {
 
     $c->res->status(401);
     $c->res->content_type('text/plain');
-    if (exists $self->_config->{authorization_required_message}) {
+    if (exists $self->{authorization_required_message}) {
         # If you set the key to undef, don't stamp on the body.
-        $c->res->body($self->_config->{authorization_required_message}) 
-            if defined $c->res->body($self->_config->{authorization_required_message}); 
+        $c->res->body($self->authorization_required_message) 
+            if defined $self->authorization_required_message; 
     }
     else {
         $c->res->body('Authorization required.');
@@ -269,7 +278,7 @@ sub _build_auth_header_domain {
           unless ref($domain) && ref($domain) eq "ARRAY";
 
         my @uris =
-          $self->_config->{use_uri_for}
+          $self->use_uri_for
           ? ( map { $c->uri_for($_) } @$domain )
           : ( map { URI::Escape::uri_escape($_) } @$domain );
 
@@ -318,7 +327,7 @@ sub _digest_auth_nonce {
 
     my $nonce   = $package->new;
 
-    if ( my $algorithm = $opts->{algorithm} || $self->_config->{algorithm}) { 
+    if ( my $algorithm = $opts->{algorithm} || $self->algorithm) { 
         $nonce->algorithm( $algorithm );
     }
 

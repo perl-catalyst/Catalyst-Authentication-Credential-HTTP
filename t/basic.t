@@ -139,6 +139,7 @@ $c->clear;
 $req_headers->clear;
 $res_headers->clear;
 $c->clear;
+$body = 'quuux';
 {
     my $self = new_self( type => 'any', password_type => 'clear',
         authorization_required_message => undef
@@ -146,7 +147,7 @@ $c->clear;
     throws_ok {
         $self->authenticate( $c, $realm );
     } qr/^ $Catalyst::DETACH $/x, "detached";
-    is( $body, undef, 'Body is not set - user overrode auth message');
+    is( $body, 'quuux', 'Body is not set - user overrode auth message');
 }
 
 # Check domain config works
