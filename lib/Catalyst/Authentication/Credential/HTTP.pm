@@ -71,11 +71,18 @@ sub authenticate_basic {
 	    my $user_obj = $realm->find_user( { $self->username_field => $username }, $c);
 	    if (ref($user_obj)) {
             my $opts = {};
-            $opts->{$self->password_field} = $password 
-                if $self->password_field;            
+            $opts->{$self->password_field} = $password
+                if $self->password_field;
             if ($self->check_password($user_obj, $opts)) {
                 return $user_obj;
             }
+            else {
+                $c->log->debug("Password mismatch!") if $c->debug;
+            }
+         }
+         else {
+             $c->log->debug("Unable to locate user matching user info provided")
+                if $c->debug;
         }
         else {
             $c->log->debug("Unable to locate user matching user info provided") if $c->debug;
