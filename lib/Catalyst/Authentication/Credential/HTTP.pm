@@ -78,14 +78,12 @@ sub authenticate_basic {
             }
             else {
                 $c->log->debug("Password mismatch!") if $c->debug;
+                return;
             }
          }
          else {
              $c->log->debug("Unable to locate user matching user info provided")
                 if $c->debug;
-        }
-        else {
-            $c->log->debug("Unable to locate user matching user info provided") if $c->debug;
             return;
         }
     }
