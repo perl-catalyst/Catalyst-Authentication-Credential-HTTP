@@ -1,4 +1,4 @@
-use inc::Module::Install 0.65;
+use inc::Module::Install 0.87;
 
 name 'Catalyst-Authentication-Credential-HTTP';
 all_from 'lib/Catalyst/Authentication/Credential/HTTP.pm';
