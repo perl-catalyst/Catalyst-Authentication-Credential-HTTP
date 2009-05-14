@@ -1,6 +1,10 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+
+use FindBin qw/$Bin/;
+use lib "$Bin/lib";
+
 use Test::More;
 BEGIN {
     eval { require Test::WWW::Mechanize::Catalyst }
