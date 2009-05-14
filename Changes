@@ -1,3 +1,8 @@
+
+1.010 2009-05-14
+   - Moved tests out to t/lib/ (dhoss)
+
+
    - Add debug when a user is found, but passwords don't match (abraxxa)
 
 1.009  2009-01-04

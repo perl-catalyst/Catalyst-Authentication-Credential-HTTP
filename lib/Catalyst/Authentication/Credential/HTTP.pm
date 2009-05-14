@@ -20,7 +20,7 @@ __PACKAGE__->mk_accessors(qw/
     use_uri_for
 /);
 
-our $VERSION = '1.009';
+our $VERSION = '1.010';
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
@@ -634,6 +634,8 @@ Patches contributed by:
 =over
 
 =item Peter Corlett
+
+=item Devin Austin (dhoss) C<dhoss@cpan.org>
 
 =back
 
