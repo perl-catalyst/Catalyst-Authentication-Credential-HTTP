@@ -15,5 +15,7 @@ requires 'Class::Accessor::Fast';
 resources repository => 'http://dev.catalyst.perl.org/repos/Catalyst/Catalyst-Authentication-Credential-HTTP';
 
 auto_install;
+resources repository => 'http://dev.catalyst.perl.org/repos/Catalyst/Catalyst-Authentication-Credential-HTTP/1.000/trunk/';
+
 WriteAll;
 
