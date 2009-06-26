@@ -27,7 +27,7 @@ sub new {
     
     $config->{username_field} ||= 'username';
     # _config is shity back-compat with our base class.
-    my $self = { %$config, _config => $config, _debug => $app->debug };
+    my $self = { %$config, _config => $config, _debug => $app->debug ? 1 : 0 };
     bless $self, $class;
     
     $self->realm($realm);
