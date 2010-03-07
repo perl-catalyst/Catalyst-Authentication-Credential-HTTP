@@ -1,9 +1,10 @@
+   - Make Pod tests author only.
+
 1.011 2009-06-26
    - Added true/false check to _debug option
 
 1.010 2009-05-14
    - Moved tests out to t/lib/ (dhoss)
-
 
    - Add debug when a user is found, but passwords don't match (abraxxa)
 

@@ -1,4 +1,6 @@
 use inc::Module::Install 0.87;
+use Module::Install::AuthorRequires;
+use Module::Install::AuthorTests;
 
 name 'Catalyst-Authentication-Credential-HTTP';
 all_from 'lib/Catalyst/Authentication/Credential/HTTP.pm';
@@ -12,10 +14,15 @@ requires 'Test::MockObject';
 requires 'URI::Escape';
 requires 'Class::Accessor::Fast';
 
+author_requires 'Test::Pod' => '1.14';
+author_requires 'Test::Spelling' => '0.11';
+author_requires 'Test::Pod::Coverage' => '1.04';
+
 resources repository => 'http://dev.catalyst.perl.org/repos/Catalyst/Catalyst-Authentication-Credential-HTTP';
 
+author_tests 't/author';
+
 auto_install;
-resources repository => 'http://dev.catalyst.perl.org/repos/Catalyst/Catalyst-Authentication-Credential-HTTP/1.000/trunk/';
 
 WriteAll;
 
