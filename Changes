@@ -1,3 +1,6 @@
+1.012 2010-03-07
+   - Move actions out of the test applications to stop warnings.
+
    - Make Pod tests author only.
 
 1.011 2009-06-26
