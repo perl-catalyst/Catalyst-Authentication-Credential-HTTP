@@ -14,6 +14,8 @@ requires 'Test::MockObject';
 requires 'URI::Escape';
 requires 'Class::Accessor::Fast';
 
+test_requires 'Test::More' => '0.88';
+
 author_requires 'Test::WWW::Mechanize::Catalyst' => '0.51';
 author_requires 'Test::Pod' => '1.14';
 author_requires 'Test::Spelling' => '0.11';
