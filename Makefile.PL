@@ -9,11 +9,11 @@ requires 'Catalyst::Runtime';
 requires 'Catalyst::Plugin::Authentication' => '0.10005';
 requires 'Data::UUID' => '0.11';
 requires 'String::Escape';
-requires 'Test::Exception';
-requires 'Test::MockObject';
 requires 'URI::Escape';
 requires 'Class::Accessor::Fast';
 
+test_requires 'Test::Exception';
+test_requires 'Test::MockObject';
 test_requires 'Test::More' => '0.88';
 
 author_requires 'Test::WWW::Mechanize::Catalyst' => '0.51';
