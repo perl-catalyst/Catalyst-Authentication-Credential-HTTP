@@ -183,8 +183,8 @@ sub authenticate_digest {
                     $A2_digest );
             my $rq_digest = Digest::MD5::md5_hex($digest_in);
             $nonce->nonce_count($nonce_count);
-            $c->cache->set( __PACKAGE__ . '::opaque:' . $nonce->opaque,
-                $nonce );
+            my $key = __PACKAGE__ . '::opaque:' . $nonce->opaque;
+            $self->store_digest_authorization_nonce( $c, $key, $nonce );
             if ($rq_digest eq $res{response}) {
                 return $user_obj;
             }

@@ -1,3 +1,5 @@
+   - Call store_digest_authorization_nonce() instead of $c->cache->set()
+     in authenticate_digest() (RT#63669) (rjk)
    - Make Test::Exception and Test::MockObject be listed as test_requires
      rather than requires (RT#54029)
    - Skip WWW::Mech tests unless WWW::Mech is a new enough version (RT#55303).
