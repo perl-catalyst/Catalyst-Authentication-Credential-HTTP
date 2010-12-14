@@ -20,7 +20,7 @@ __PACKAGE__->mk_accessors(qw/
     use_uri_for
 /);
 
-our $VERSION = '1.012';
+our $VERSION = '1.013';
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
