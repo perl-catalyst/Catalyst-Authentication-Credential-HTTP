@@ -528,12 +528,17 @@ Performs HTTP basic authentication.
 
 =item authenticate_digest $c, $realm, \%auth_info
 
-Performs HTTP digest authentication. Note that the password_type B<must> by I<clear> for
-digest authentication to succeed, and you must have L<Catalyst::Plugin::Session> in
-your application as digest authentication needs to store persistent data.
+Performs HTTP digest authentication.
 
-Note - if you do not want to store your user passwords as clear text, then it is possible
-to store instead the MD5 digest in hex of the string '$username:$realm:$password' 
+The password_type B<must> be I<clear> for digest authentication to
+succeed.  If you do not want to store your user passwords as clear
+text, you may instead store the MD5 digest in hex of the string
+'$username:$realm:$password'.
+
+L<Catalyst::Plugin::Cache> is used for persistent storage of the nonce
+values (see L</Nonce>).  It must be loaded in your application, unless
+you override the C<store_digest_authorization_nonce> and
+C<get_digest_authorization_nonce> methods as shown below.
 
 Takes an additional parameter of I<algorithm>, the possible values of which are 'MD5' (the default)
 and 'MD5-sess'. For more information about 'MD5-sess', see section 3.2.2.2 in RFC 2617.

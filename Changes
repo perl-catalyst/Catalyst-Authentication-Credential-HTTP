@@ -3,6 +3,9 @@
    - Make Test::Exception and Test::MockObject be listed as test_requires
      rather than requires (RT#54029)
    - Skip WWW::Mech tests unless WWW::Mech is a new enough version (RT#55303).
+   - Improve documentation for authenticate_digest() (rjk)
+     - depends on Catalyst::Plugin::Cache, not Catalyst::Plugin::Session
+     - reorganize and clarify
 
 1.012 2010-03-07
    - Move actions out of the test applications to stop warnings.
