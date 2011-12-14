@@ -10,13 +10,13 @@ use Catalyst       ();
 use Digest::MD5    ();
 
 __PACKAGE__->mk_accessors(qw/
-    _config 
-    authorization_required_message 
-    password_field 
-    username_field 
-    type 
-    realm 
-    algorithm 
+    _config
+    authorization_required_message
+    password_field
+    username_field
+    type
+    realm
+    algorithm
     use_uri_for
 /);
 
@@ -24,22 +24,22 @@ our $VERSION = '1.013';
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
-    
+
     $config->{username_field} ||= 'username';
     # _config is shity back-compat with our base class.
     my $self = { %$config, _config => $config, _debug => $app->debug ? 1 : 0 };
     bless $self, $class;
-    
+
     $self->realm($realm);
-    
+
     $self->init;
     return $self;
-}    
+}
 
 sub init {
     my ($self) = @_;
     my $type = $self->type || 'any';
-    
+
     if (!grep /$type/, ('basic', 'digest', 'any')) {
         Catalyst::Exception->throw(__PACKAGE__ . " used with unsupported authentication type: " . $type);
     }
@@ -55,7 +55,7 @@ sub authenticate {
 
     $auth = $self->authenticate_basic($c, $realm, $auth_info) if $self->_is_http_auth_type('basic');
     return $auth if $auth;
-    
+
     $self->authorization_required_response($c, $realm, $auth_info);
     die $Catalyst::DETACH;
 }
@@ -215,8 +215,8 @@ sub authorization_required_response {
     $c->res->content_type('text/plain');
     if (exists $self->{authorization_required_message}) {
         # If you set the key to undef, don't stamp on the body.
-        $c->res->body($self->authorization_required_message) 
-            if defined $self->authorization_required_message; 
+        $c->res->body($self->authorization_required_message)
+            if defined $self->authorization_required_message;
     }
     else {
         $c->res->body('Authorization required.');
@@ -243,9 +243,9 @@ sub _add_authentication_header {
 
 sub _create_digest_auth_response {
     my ( $self, $c, $opts ) = @_;
-      
+
     return unless $self->_is_http_auth_type('digest');
-    
+
     if ( my $digest = $self->_build_digest_auth_header( $c, $opts ) ) {
         _add_authentication_header( $c, $digest );
         return 1;
@@ -256,7 +256,7 @@ sub _create_digest_auth_response {
 
 sub _create_basic_auth_response {
     my ( $self, $c, $opts ) = @_;
-    
+
     return unless $self->_is_http_auth_type('basic');
 
     if ( my $basic = $self->_build_basic_auth_header( $c, $opts ) ) {
@@ -268,11 +268,11 @@ sub _create_basic_auth_response {
 }
 
 sub _build_auth_header_realm {
-    my ( $self, $c, $opts ) = @_;    
+    my ( $self, $c, $opts ) = @_;
     if ( my $realm_name = String::Escape::qprintable($opts->{realm} ? $opts->{realm} : $self->realm->name) ) {
         $realm_name = qq{"$realm_name"} unless $realm_name =~ /^"/;
         return 'realm=' . $realm_name;
-    } 
+    }
     return;
 }
 
@@ -288,7 +288,7 @@ sub _build_auth_header_domain {
           : ( map { URI::Escape::uri_escape($_) } @$domain );
 
         return qq{domain="@uris"};
-    } 
+    }
     return;
 }
 
@@ -311,7 +311,7 @@ sub _build_digest_auth_header {
     my $nonce = $self->_digest_auth_nonce($c, $opts);
 
     my $key = __PACKAGE__ . '::opaque:' . $nonce->opaque;
-   
+
     $self->store_digest_authorization_nonce( $c, $key, $nonce );
 
     return _join_auth_header_parts( Digest =>
@@ -332,7 +332,7 @@ sub _digest_auth_nonce {
 
     my $nonce   = $package->new;
 
-    if ( my $algorithm = $opts->{algorithm} || $self->algorithm) { 
+    if ( my $algorithm = $opts->{algorithm} || $self->algorithm) {
         $nonce->algorithm( $algorithm );
     }
 
@@ -346,7 +346,7 @@ sub _join_auth_header_parts {
 
 sub get_digest_authorization_nonce {
     my ( $self, $c, $key ) = @_;
-    
+
     _check_cache($c);
     return $c->cache->get( $key );
 }
@@ -400,9 +400,9 @@ for Catalyst.
 
     __PACKAGE__->config( authentication => {
         default_realm => 'example',
-        realms => { 
-            example => { 
-                credential => { 
+        realms => {
+            example => {
+                credential => {
                     class => 'HTTP',
                     type  => 'any', # or 'digest' or 'basic'
                     password_type  => 'clear',
@@ -421,20 +421,20 @@ for Catalyst.
     sub foo : Local {
         my ( $self, $c ) = @_;
 
-        $c->authenticate({ realm => "example" }); 
+        $c->authenticate({ realm => "example" });
         # either user gets authenticated or 401 is sent
-        # Note that the authentication realm sent to the client (in the 
-        # RFC 2617 sense) is overridden here, but this *does not* 
-        # effect the Catalyst::Authentication::Realm used for 
-        # authentication - to do that, you need 
+        # Note that the authentication realm sent to the client (in the
+        # RFC 2617 sense) is overridden here, but this *does not*
+        # effect the Catalyst::Authentication::Realm used for
+        # authentication - to do that, you need
         # $c->authenticate({}, 'otherrealm')
 
         do_stuff();
     }
-    
+
     sub always_auth : Local {
         my ( $self, $c ) = @_;
-        
+
         # Force authorization headers onto the response so that the user
         # is asked again for authentication, even if they successfully
         # authenticated.
@@ -506,12 +506,12 @@ Catalyst::Authentication::Realm object used for the authentication.
 
 Array reference to domains used to build the authorization headers.
 
-This list of domains defines the protection space. If a domain URI is an 
-absolute path (starts with /), it is relative to the root URL of the server being accessed. 
-An absolute URI in this list may refer to a different server than the one being accessed. 
+This list of domains defines the protection space. If a domain URI is an
+absolute path (starts with /), it is relative to the root URL of the server being accessed.
+An absolute URI in this list may refer to a different server than the one being accessed.
 
-The client will use this list to determine the set of URIs for which the same authentication 
-information may be sent. 
+The client will use this list to determine the set of URIs for which the same authentication
+information may be sent.
 
 If this is omitted or its value is empty, the client will assume that the
 protection space consists of all URIs on the responding server.
@@ -585,12 +585,12 @@ Set this to a string to override the default body content "Authorization require
 
 =item password_type
 
-The type of password returned by the user object. Same usage as in 
+The type of password returned by the user object. Same usage as in
 L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/password_type>
 
 =item password_field
 
-The name of accessor used to retrieve the value of the password field from the user object. Same usage as in 
+The name of accessor used to retrieve the value of the password field from the user object. Same usage as in
 L<Catalyst::Authentication::Credential::Password|Catalyst::Authentication::Credential::Password/password_field>
 
 =item username_field
