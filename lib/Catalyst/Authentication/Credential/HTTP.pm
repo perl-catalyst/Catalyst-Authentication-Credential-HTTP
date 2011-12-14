@@ -18,6 +18,8 @@ __PACKAGE__->mk_accessors(qw/
     realm
     algorithm
     use_uri_for
+    no_unprompted_authorization_required
+    require_ssl
 /);
 
 our $VERSION = '1.013';
@@ -50,14 +52,24 @@ sub authenticate {
     my ( $self, $c, $realm, $auth_info ) = @_;
     my $auth;
 
+    $self->authentication_failed( $c, $realm, $auth_info )
+        if $self->require_ssl ? $c->req->scheme ne 'https' : 0;
+
     $auth = $self->authenticate_digest($c, $realm, $auth_info) if $self->_is_http_auth_type('digest');
     return $auth if $auth;
 
     $auth = $self->authenticate_basic($c, $realm, $auth_info) if $self->_is_http_auth_type('basic');
     return $auth if $auth;
 
-    $self->authorization_required_response($c, $realm, $auth_info);
-    die $Catalyst::DETACH;
+    $self->authentication_failed( $c, $realm, $auth_info );
+}
+
+sub authentication_failed {
+    my ( $self, $c, $realm, $auth_info ) = @_;
+    unless (!$self->no_unprompted_authorization_required) {
+        $self->authorization_required_response($c, $realm, $auth_info);
+        die $Catalyst::DETACH;
+    }
 }
 
 sub authenticate_basic {
