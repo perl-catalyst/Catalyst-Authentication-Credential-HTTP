@@ -22,7 +22,7 @@ __PACKAGE__->mk_accessors(qw/
     require_ssl
 /);
 
-our $VERSION = '1.013';
+our $VERSION = '1.014';
 
 sub new {
     my ($class, $config, $app, $realm) = @_;

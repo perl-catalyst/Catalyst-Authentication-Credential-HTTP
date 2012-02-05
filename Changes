@@ -1,3 +1,4 @@
+1.014 2012-02-05
    - Add require_ssl configuration setting.
    - Add no_unprompted_authorization_required configuration setting.
 
