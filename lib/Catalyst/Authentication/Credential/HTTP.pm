@@ -574,6 +574,10 @@ Set or get the C<$nonce> object used by the digest auth mode.
 You may override these methods. By default they will call C<get> and C<set> on
 C<< $c->cache >>.
 
+=item authentication_failed
+
+Sets the 401 response and calls C<< $ctx->detach >>.
+
 =back
 
 =head1 CONFIGURATION
