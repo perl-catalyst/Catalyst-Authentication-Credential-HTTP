@@ -12,6 +12,10 @@ add_stopwords( grep { defined $_ && length $_ } <DATA>);
 all_pod_files_spelling_ok();
 
 __DATA__
+APIs
+Sascha
+URI
+https
 dhoss
 behaviour
 Doran
