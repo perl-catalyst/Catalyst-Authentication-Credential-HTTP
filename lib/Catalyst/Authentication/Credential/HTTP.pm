@@ -53,7 +53,7 @@ sub authenticate {
     my $auth;
 
     $self->authentication_failed( $c, $realm, $auth_info )
-        if $self->require_ssl ? $c->req->scheme ne 'https' : 0;
+        if $self->require_ssl ? $c->req->base->scheme ne 'https' : 0;
 
     $auth = $self->authenticate_digest($c, $realm, $auth_info) if $self->_is_http_auth_type('digest');
     return $auth if $auth;
@@ -66,7 +66,7 @@ sub authenticate {
 
 sub authentication_failed {
     my ( $self, $c, $realm, $auth_info ) = @_;
-    unless (!$self->no_unprompted_authorization_required) {
+    unless ($self->no_unprompted_authorization_required) {
         $self->authorization_required_response($c, $realm, $auth_info);
         die $Catalyst::DETACH;
     }
@@ -578,7 +578,7 @@ C<< $c->cache >>.
 
 =head1 CONFIGURATION
 
-All configuration is stored in C<< YourApp->config(authentication => { yourrealm => { credential => { class => 'HTTP', %config } } } >>.
+All configuration is stored in C<< YourApp->config('Plugin::Authentication' => { yourrealm => { credential => { class => 'HTTP', %config } } } >>.
 
 This should be a hash, and it can contain the following entries:
 
@@ -615,6 +615,23 @@ If this configuration key has a true value, then the domain(s) for the authoriza
 run through $c->uri_for(). Use this configuration option if your application is not running at the root
 of your domain, and you want to ensure that authentication credentials from your application are not shared with
 other applications on the same server.
+
+=item require_ssl
+
+If this configuration key has a true value then authentication will be denied
+(and a 401 issued in normal circumstances) unless the request is via https.
+
+=item no_unprompted_authorization_required
+
+Causes authentication to fail as normal modules do, without calling
+C<< $c->detach >>. This means that the basic auth credential can be used as
+part of the progressive realm.
+
+However use like this is probably not optimum it also means that users in
+browsers ill never get a HTTP authenticate dialogue box (unless you manually
+return a 410 response in your application), and even some programatic
+user agents (for APIs) will not send the Authorization header without
+specific manipulation of the request headers.
 
 =back
 

@@ -1,3 +1,6 @@
+   - Add require_ssl configuration setting.
+   - Add no_unprompted_authorization_required configuration setting.
+
 1.013 2010-12-14
    - Call store_digest_authorization_nonce() instead of $c->cache->set()
      in authenticate_digest() (RT#63669) (rjk)
