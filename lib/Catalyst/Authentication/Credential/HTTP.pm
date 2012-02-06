@@ -633,7 +633,7 @@ part of the progressive realm.
 
 However use like this is probably not optimum it also means that users in
 browsers ill never get a HTTP authenticate dialogue box (unless you manually
-return a 410 response in your application), and even some automated
+return a 401 response in your application), and even some automated
 user agents (for APIs) will not send the Authorization header without
 specific manipulation of the request headers.
 
