@@ -433,7 +433,7 @@ for Catalyst.
     sub foo : Local {
         my ( $self, $c ) = @_;
 
-        $c->authenticate({ realm => "example" });
+        $c->authenticate({}, "example");
         # either user gets authenticated or 401 is sent
         # Note that the authentication realm sent to the client (in the
         # RFC 2617 sense) is overridden here, but this *does not*
