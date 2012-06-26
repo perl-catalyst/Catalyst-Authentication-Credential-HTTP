@@ -644,7 +644,7 @@ specific manipulation of the request headers.
 
 Enables support for .NET (or other similarly broken clients), which
 fails to include the query string in the uri in the digest
-Authorization header.
+Authorization header, contrary to rfc2617.
 
 This option has no effect on clients that include the query string;
 they will continue to work as normal.
