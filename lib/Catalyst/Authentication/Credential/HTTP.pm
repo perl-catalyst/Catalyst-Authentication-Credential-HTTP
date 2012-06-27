@@ -20,6 +20,7 @@ __PACKAGE__->mk_accessors(qw/
     use_uri_for
     no_unprompted_authorization_required
     require_ssl
+    broken_dotnet_digest_without_query_string
 /);
 
 our $VERSION = '1.014';
@@ -130,7 +131,9 @@ sub authenticate_digest {
         my $algorithm   = $res{algorithm} || 'MD5';
         my $nonce_count = '0x' . $res{nc};
 
-        my $check = $uri eq $res{uri}
+        my $check = ($uri eq $res{uri} ||
+                     ($self->broken_dotnet_digest_without_query_string &&
+                      $c->request->uri->path eq $res{uri}))
           && ( exists $res{username} )
           && ( exists $res{qop} )
           && ( exists $res{cnonce} )
@@ -637,6 +640,15 @@ return a 401 response in your application), and even some automated
 user agents (for APIs) will not send the Authorization header without
 specific manipulation of the request headers.
 
+=item broken_dotnet_digest_without_query_string
+
+Enables support for .NET (or other similarly broken clients), which
+fails to include the query string in the uri in the digest
+Authorization header, contrary to rfc2617.
+
+This option has no effect on clients that include the query string;
+they will continue to work as normal.
+
 =back
 
 =head1 RESTRICTIONS
@@ -674,6 +686,8 @@ Patches contributed by:
 =item Peter Corlett
 
 =item Devin Austin (dhoss) C<dhoss@cpan.org>
+
+=item Ronald J Kimball
 
 =back
 
