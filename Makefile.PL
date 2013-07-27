@@ -21,7 +21,7 @@ author_requires 'Test::Pod' => '1.14';
 author_requires 'Test::Spelling' => '0.11';
 author_requires 'Test::Pod::Coverage' => '1.04';
 
-resources repository => 'http://dev.catalyst.perl.org/repos/Catalyst/Catalyst-Authentication-Credential-HTTP';
+resources repository => 'git://git.shadowcat.co.uk/catagits/Catalyst/Catalyst-Authentication-Credential-HTTP';
 
 author_tests 't/author';
 
