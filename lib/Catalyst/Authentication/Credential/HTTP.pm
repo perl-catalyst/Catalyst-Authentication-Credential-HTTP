@@ -375,7 +375,8 @@ sub store_digest_authorization_nonce {
     return $c->cache->set( $key, $nonce );
 }
 
-package Catalyst::Authentication::Credential::HTTP::Nonce;
+package # hide from PAUSE
+    Catalyst::Authentication::Credential::HTTP::Nonce;
 
 use strict;
 use base qw[ Class::Accessor::Fast ];
