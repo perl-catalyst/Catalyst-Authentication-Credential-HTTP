@@ -1,6 +1,6 @@
 Release history for Catalyst-Authentication-Store-Htpasswd
 
-{{$NEXT}}
+1.017     2017-06-27 23:20:58Z
    - modernized the tooling for 5.26 compatibility
 
 1.016 2013-07-27
