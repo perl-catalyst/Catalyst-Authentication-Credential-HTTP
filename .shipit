@@ -1,9 +1,0 @@
-# auto-generated shipit config file.
-steps = FindVersion, ChangeVersion, CheckChangeLog, DistTest, Commit, Tag, MakeDist
-
-svn.tagpattern =  http://dev.catalyst.perl.org/repos/Catalyst/Catalyst-Authentication-Credential-HTTP/1.000/tags/%v
-
-# svn.tagpattern = MyProj-%v
-# svn.tagpattern = http://code.example.com/svn/tags/MyProj-%v
-
-CheckChangeLog.files = Changes

@@ -1,3 +1,8 @@
+Release history for Catalyst-Authentication-Store-Htpasswd
+
+{{$NEXT}}
+   - modernized the tooling for 5.26 compatibility
+
 1.016 2013-07-27
    - Fix repository metadata. RT#87114
 
