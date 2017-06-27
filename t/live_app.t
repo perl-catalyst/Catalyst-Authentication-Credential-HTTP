@@ -5,15 +5,7 @@ use FindBin qw/$Bin/;
 use lib "$Bin/lib";
 
 use Test::More;
-BEGIN {
-    do {
-        eval { require Test::WWW::Mechanize::Catalyst }
-        and
-        Test::WWW::Mechanize::Catalyst->VERSION('0.51')
-    }
-      or plan skip_all =>
-      "Test::WWW::Mechanize::Catalyst is needed for this test";
-}
+use Test::Needs { 'Test::WWW::Mechanize::Catalyst' => '0.51' };
 use HTTP::Request;
 
 use Test::More;
