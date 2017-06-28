@@ -8,8 +8,6 @@ use Test::More;
 use Test::Needs { 'Test::WWW::Mechanize::Catalyst' => '0.51' };
 use HTTP::Request;
 
-use Test::More;
-use Test::WWW::Mechanize::Catalyst;
 my $mech = Test::WWW::Mechanize::Catalyst->new(catalyst_app => 'AuthTestApp');
 $mech->get("http://localhost/moose");
 is( $mech->status, 401, "status is 401" ) or die $mech->content;

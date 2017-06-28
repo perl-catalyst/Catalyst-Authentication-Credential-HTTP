@@ -13,8 +13,7 @@ plan tests => 12;
 
 use Digest::MD5;
 use HTTP::Request;
-use Test::More;
-use Test::WWW::Mechanize::Catalyst qw/AuthDigestTestApp/;
+Test::WWW::Mechanize::Catalyst->import(qw/AuthDigestTestApp/);
 
 sub do_test {
     my $username = shift;

@@ -13,8 +13,6 @@ plan tests => 19;
 
 use Digest::MD5;
 use HTTP::Request;
-use Test::More;
-use Test::WWW::Mechanize::Catalyst;
 
 sub do_test {
     my ($username, $uri, $emulate_dotnet, $fail) = @_;
