@@ -1,5 +1,7 @@
 Release history for Catalyst-Authentication-Store-Htpasswd
 
+{{$NEXT}}
+
 1.018     2017-06-28 00:28:23Z
    - removed optional prereqs from metadata (added in 1.017)
 

@@ -25,7 +25,7 @@ __PACKAGE__->mk_accessors(qw/
     broken_dotnet_digest_without_query_string
 /);
 
-our $VERSION = '1.018';
+our $VERSION = '1.019';
 
 sub new {
     my ($class, $config, $app, $realm) = @_;
