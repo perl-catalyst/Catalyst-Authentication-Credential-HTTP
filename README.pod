@@ -8,7 +8,7 @@ Catalyst::Authentication::Credential::HTTP - HTTP Basic and Digest authenticatio
 
 =head1 VERSION
 
-version 1.017
+version 1.018
 
 =head1 SYNOPSIS
 
