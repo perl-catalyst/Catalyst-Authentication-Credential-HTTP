@@ -380,7 +380,9 @@ package # hide from PAUSE
 
 use strict;
 use base qw[ Class::Accessor::Fast ];
-use Data::UUID 0.11 ();
+use Crypt::SysRandom;
+
+# RECOMMEND PRERQ: Crypt::SysRandom::XS 0.009
 
 __PACKAGE__->mk_accessors(qw[ nonce nonce_count qop opaque algorithm ]);
 
@@ -388,14 +390,19 @@ sub new {
     my $class = shift;
     my $self  = $class->SUPER::new(@_);
 
-    $self->nonce( Data::UUID->new->create_b64 );
-    $self->opaque( Data::UUID->new->create_b64 );
+    $self->nonce( $self->_generate_nonce );
+    $self->opaque( $self->_generate_nonce );
     $self->qop('auth,auth-int');
     $self->nonce_count('0x0');
     $self->algorithm('MD5');
 
     return $self;
 }
+
+sub _generate_nonce {
+    return unpack('H*', Crypt::SysRandom::random_bytes(20));
+}
+
 
 1;
 
