@@ -382,8 +382,6 @@ use strict;
 use base qw[ Class::Accessor::Fast ];
 use Crypt::SysRandom;
 
-# RECOMMEND PRERQ: Crypt::SysRandom::XS 0.009
-
 __PACKAGE__->mk_accessors(qw[ nonce nonce_count qop opaque algorithm ]);
 
 sub new {
