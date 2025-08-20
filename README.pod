@@ -8,7 +8,7 @@ Catalyst::Authentication::Credential::HTTP - HTTP Basic and Digest authenticatio
 
 =head1 VERSION
 
-version 1.018
+version 1.019
 
 =head1 SYNOPSIS
 
@@ -289,7 +289,7 @@ L<C<#catalyst> on C<irc.perl.org>|irc://irc.perl.org/#catalyst>.
 
 =head1 CONTRIBUTORS
 
-=for stopwords Tomas Doran Karen Etheridge Sascha Kiefer Devin Austin Ronald J Kimball Jess Robinson Ton Voon J. Shirley Brian Cassidy Jonathan Rockway
+=for stopwords Tomas Doran Karen Etheridge Sascha Kiefer Alexander Hartmaier Devin Austin Jess Robinson Ronald J Kimball Ton Voon Brian Cassidy Graham Knop Jonathan Rockway J. Shirley Robert Rothenberg
 
 =over 4
 
@@ -307,15 +307,19 @@ Sascha Kiefer <esskar@cpan.org>
 
 =item *
 
+Alexander Hartmaier <abraxxa@cpan.org>
+
+=item *
+
 Devin Austin <devin.austin@gmail.com>
 
 =item *
 
-Ronald J Kimball <rjk@linguist.dartmouth.edu>
+Jess Robinson <cpan@desert-island.me.uk>
 
 =item *
 
-Jess Robinson <cpan@desert-island.me.uk>
+Ronald J Kimball <rjk@linguist.dartmouth.edu>
 
 =item *
 
@@ -331,15 +335,23 @@ Ton Voon <ton.voon@opsera.com>
 
 =item *
 
-J. Shirley <jshirley+cpan@gmail.com>
-
-=item *
-
 Brian Cassidy <bricas@cpan.org>
 
 =item *
 
+Graham Knop <haarg@haarg.org>
+
+=item *
+
 Jonathan Rockway <jon@jrock.us>
+
+=item *
+
+J. Shirley <jshirley+cpan@gmail.com>
+
+=item *
+
+Robert Rothenberg <rrwo@cpan.org>
 
 =back
 

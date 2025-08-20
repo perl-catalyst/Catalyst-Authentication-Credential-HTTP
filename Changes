@@ -1,6 +1,6 @@
 Release history for Catalyst-Authentication-Store-Htpasswd
 
-{{$NEXT}}
+1.019     2025-08-20 17:36:50Z
    - fix CVE-2025-40920
      by using Crypt::SysRandom to generate nonces instead of Data::UUID
 
